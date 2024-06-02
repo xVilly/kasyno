@@ -15,6 +15,8 @@ public class SceneManager {
         add("BlackJackController");
         add("RouletteController");
         add("LoginPage");
+        add("HomePage");
+        add("ChatPage");
     }};
 
     public static final String startingScene = "LoginPage";
@@ -34,6 +36,7 @@ public class SceneManager {
     public void Initialize(Stage primaryStage) {
         this.primaryStage = primaryStage;
         openWindows.put("primaryStage", primaryStage);
+        primaryStage.setResizable(false);
         //this.primaryStage.getIcons().add(new Image("Images/icon.png"));
     }
 
@@ -64,6 +67,11 @@ public class SceneManager {
             primaryStage.setScene(new Scene(root));
         else
             primaryStage.getScene().setRoot(root);
+
+        primaryStage.setWidth(root.prefWidth(-1));
+        primaryStage.setHeight(root.prefHeight(-1));
+        primaryStage.centerOnScreen();
+
 
         controller.onActivate();
     }

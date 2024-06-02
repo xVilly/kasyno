@@ -61,4 +61,14 @@ public class ConnectionManager {
 
         }
     }
+
+    public List<ClientHandler> getUserConnections(String username) {
+        List<ClientHandler> userConnections = new ArrayList<>();
+        for (ClientHandler clientHandler : clientConnections) {
+            if (clientHandler.getAssociatedUser().equals(username)) {
+                userConnections.add(clientHandler);
+            }
+        }
+        return userConnections;
+    }
 }

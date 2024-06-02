@@ -52,7 +52,7 @@ public class UserManager {
         }
     }
 
-    public int Authenticate(String username, String password, ClientHandler clientHandler) {
+    public LoginResponse Authenticate(String username, String password, ClientHandler clientHandler) {
         try {
             Connection db = DatabaseConnection.getConnection();
             String sql = "SELECT * FROM `user-accounts` WHERE name = ? AND password = ?";
@@ -65,14 +65,35 @@ public class UserManager {
             ResultSet result = statement.executeQuery();
             if (result.next()) {
                 System.out.println("[casino-server] User '"+username+"' authenticated successfully");
-                return 1;
+                return new LoginResponse(1, username, result.getDouble("balance"));
             } else {
                 System.out.println("[casino-server] User '"+username+"' failed to authenticate");
-                return 0;
+                return new LoginResponse(0);
             }
         } catch (SQLException e) {
             System.out.println("[casino-server] Failed to authenticate user '"+username+"': " + e.getMessage());
-            return 0;
+            return new LoginResponse(0);
+        }
+    }
+
+    public UserContext GetUserData(String username) {
+        try {
+            Connection db = DatabaseConnection.getConnection();
+            String sql = "SELECT * FROM `user-accounts` WHERE name = ?";
+            PreparedStatement statement = db.prepareStatement(sql);
+
+            statement.setString(1, username);
+            ResultSet result = statement.executeQuery();
+            if (result.next()) {
+                System.out.println("[casino-server] User '"+username+"' data retrieved successfully");
+                return new UserContext(result.getString("name"), result.getDouble("balance"));
+            } else {
+                System.out.println("[casino-server] Failed to retrieve user data for '"+username+"'");
+                return null;
+            }
+        } catch (SQLException e) {
+            System.out.println("[casino-server] Failed to retrieve user data for '"+username+"': " + e.getMessage());
+            return null;
         }
     }
 

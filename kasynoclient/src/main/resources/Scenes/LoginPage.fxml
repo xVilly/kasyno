@@ -48,7 +48,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<FlowPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="300.0" minWidth="300.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: green;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.casino.Controllers.LoginController">
+<FlowPane alignment="CENTER" maxHeight="400.0" maxWidth="600.0" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: green;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.casino.Controllers.LoginController">
    <children>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="297.0">
          <children>
@@ -108,8 +108,6 @@
                   </LinearGradient>
                </textFill>
             </Button>
-            <Button mnemonicParsing="false" onAction="#onBlackJack" text="BlackJack (tymczasowo)" />
-            <Button mnemonicParsing="false" onAction="#onRoulette" text="Ruletka (tymczasowo)" />
             <Button fx:id="buttonCreateAccount" mnemonicParsing="false" onAction="#onCreateAccount" style="-fx-background-color: rgba(0,0,0,0);" text="or Create New Account" textFill="#c3fff9">
                <font>
                   <Font name="JetBrains Mono Light" size="12.0" />

@@ -35,4 +35,15 @@ public class MessageSend {
         msg.putString(password);
         sendMessage(msg);
     }
+
+    public void sendChatJoin() {
+        OutgoingMessage msg = new OutgoingMessage((byte) 0x04);
+        sendMessage(msg);
+    }
+
+    public void sendChatMessage(String message) {
+        OutgoingMessage msg = new OutgoingMessage((byte) 0x05);
+        msg.putString(message);
+        sendMessage(msg);
+    }
 }

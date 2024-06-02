@@ -37,6 +37,17 @@ public class IncomingMessage {
         }
     }
 
+    public double getDouble() {
+        double result = 0;
+        try {
+            result = buffer.getDouble();
+        } catch (BufferUnderflowException ex) {
+            System.out.println("[casino-server] Buffer underflow on getDouble while handling opcode '"+this.opcode+"'.");
+        }
+        return result;
+    
+    }
+
     public ByteBuffer getBuffer() {
         return buffer;
     }

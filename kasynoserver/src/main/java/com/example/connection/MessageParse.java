@@ -3,7 +3,9 @@ package com.example.connection;
 import java.nio.ByteBuffer;
 import java.sql.Connection;
 
+import com.example.chat.ChatManager;
 import com.example.game.GameManager;
+import com.example.user.LoginResponse;
 import com.example.user.UserManager;
 
 public class MessageParse {
@@ -37,6 +39,16 @@ public class MessageParse {
             case 0x03:
                 parseGameStart(msg);
                 break;
+
+            /* 0x04: Join Chat */
+            case 0x04:
+                parseChatJoin(msg);
+                break;
+
+            /* 0x05: Chat Message */
+            case 0x05:
+                parseChatMessage(msg);
+                break;
             
             default:
                 System.out.println("[casino-server] Received unknown opcode "+opcode+" from client '"+clientHandler.getIpAddress()+"' (id "+clientHandler.getConnectionId()+")");
@@ -63,8 +75,11 @@ public class MessageParse {
     private void parseClientLogin(IncomingMessage msg) {
         String name = msg.getString();
         String password = msg.getString();
-        int result = UserManager.getInstance().Authenticate(name, password, msg.getSender());
-        ConnectionManager.getInstance().getMessageSender().sendAuthenticationResponse(msg.getSender(), result == 1);
+        LoginResponse response = UserManager.getInstance().Authenticate(name, password, msg.getSender());
+        if (response.getResult() == 1) {
+            msg.getSender().setAssociatedUser(name);
+        }
+        ConnectionManager.getInstance().getMessageSender().sendAuthenticationResponse(msg.getSender(), response);
     }
 
     private void parseGameStart(IncomingMessage msg) {
@@ -75,6 +90,23 @@ public class MessageParse {
         if (result >= 0) {
             GameManager.getInstance().joinGame(result, username, betAmount);
         }
+    }
+
+    private void parseChatJoin(IncomingMessage msg) {
+        String username = msg.getSender().getAssociatedUser();
+        if (username == null)
+            return;
+
+        ChatManager.getInstance().onUserJoin(username);
+    }
+
+    private void parseChatMessage(IncomingMessage msg) {
+        String username = msg.getSender().getAssociatedUser();
+        if (username == null)
+            return;
+
+        String message = msg.getString();
+        ChatManager.getInstance().onUserMessage(username, message);
     }
 
 }

@@ -86,14 +86,21 @@ public class LoginController implements IController {
 
         ServerConnection connection = ConnectionManager.getInstance().GetConnection();
         connection.getMessageSender().sendLogin(textValueUsername.getText(), textValuePassword.getText());
-        
-        
     }
 
     void onLoginCallback(IncomingMessage msg) {
         int result = msg.getInt();
         if (result == 1) {
-            SceneManager.getInstance().activate("BlackJackController");
+            SceneManager.getInstance().activate("HomePage");
+            String username = msg.getString();
+            double balance = msg.getDouble();
+            HomeController controller = (HomeController)SceneManager.getInstance().getController("HomePage");
+            if (controller == null) {
+                return;
+            }
+            Platform.runLater(() -> {
+                controller.setup(username, balance);
+            });
         } else {
             Platform.runLater(() -> {
             loginError.setVisible(true);
