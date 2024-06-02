@@ -87,5 +87,9 @@ public class ServerConnection {
     public MessageSend getMessageSender() {
         return msgSender;
     }
+
+    public void registerCallback(byte opcode, ClientActionCallback callback) {
+        msgParser.setCallback(opcode, callback);
+    }
     
 }

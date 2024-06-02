@@ -65,7 +65,7 @@
                   <Image url="@../Images/logo.png" />
                </image>
             </ImageView>
-            <TextField fx:id="textValueEmail" alignment="CENTER" onAction="#onLogin" prefHeight="25.0" prefWidth="227.0" promptText="Email">
+            <TextField fx:id="textValueUsername" alignment="CENTER" onAction="#onLogin" prefHeight="25.0" prefWidth="227.0" promptText="Username">
                <font>
                   <Font name="JetBrains Mono Medium" size="12.0" />
                </font>

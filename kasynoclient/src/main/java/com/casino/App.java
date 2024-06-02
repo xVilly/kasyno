@@ -4,7 +4,7 @@ import javafx.application.Application;
 import com.casino.Controllers.SceneManager;
 import javafx.stage.Stage;
 
-import com.casino.Connection.ServerConnection;
+import com.casino.Connection.ConnectionManager;
 
 public class App extends Application {
     @Override
@@ -17,8 +17,8 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
-        ServerConnection server = new ServerConnection("localhost", 9999);
-        server.Start();
+        ConnectionManager connectionManager = ConnectionManager.getInstance();
+        connectionManager.connect("localhost", 9999);
         launch();
     }
 }
