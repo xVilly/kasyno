@@ -7,13 +7,13 @@ public class GameContext {
     private int id;
     private int type;
     private String user;
-    private HashMap<String, Integer> bets;
+    private double bet;
 
     public GameContext(int id, int type, String user, double bet) {
         this.id = id;
         this.type = type;
         this.user = user;
-        this.bets = bets;
+        this.bet = bet;
     }
 
     public int getId() {
@@ -40,12 +40,12 @@ public class GameContext {
         this.user = user;
     }
 
-    public HashMap<String, Integer> getBets() {
-        return bets;
+    public double getBet() {
+        return bet;
     }
 
-    public void setBets(HashMap<String, Integer> bets) {
-        this.bets = bets;
+    public void setBet(double bet) {
+        this.bet = bet;
     }
 
     
