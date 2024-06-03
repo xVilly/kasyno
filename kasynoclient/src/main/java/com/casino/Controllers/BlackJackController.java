@@ -575,7 +575,7 @@ public class BlackJackController implements IController {
         dealerFaceDownCardView = new ImageView();
         dealerFaceDownCard = dealer.getHand().get(dealerCardsPassed);
         cardPathForTheExposure = dealerFaceDownCard.getImagePath();
-        dealerFaceDownCard.setImagePath("/com/example/kasyno/pngcards/facedown.png");
+        dealerFaceDownCard.setImagePath("/Images/pngcards/facedown.png");
         Image dealerFaceDownCardImage = new Image(getClass().getResource(dealerFaceDownCard.getImagePath()).toExternalForm());
         dealerFaceDownCardView.setImage(dealerFaceDownCardImage);
         dealerFaceDownCardView.setFitWidth(155);

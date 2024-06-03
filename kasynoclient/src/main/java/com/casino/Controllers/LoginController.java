@@ -91,7 +91,9 @@ public class LoginController implements IController {
     void onLoginCallback(IncomingMessage msg) {
         int result = msg.getInt();
         if (result == 1) {
-            SceneManager.getInstance().activate("HomePage");
+            Platform.runLater(() -> {
+                SceneManager.getInstance().activate("HomePage");
+            });
             String username = msg.getString();
             double balance = msg.getDouble();
             HomeController controller = (HomeController)SceneManager.getInstance().getController("HomePage");

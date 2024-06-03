@@ -68,9 +68,13 @@ public class SceneManager {
         else
             primaryStage.getScene().setRoot(root);
 
-        primaryStage.setWidth(root.prefWidth(-1));
-        primaryStage.setHeight(root.prefHeight(-1));
+        
+        primaryStage.setResizable(true);
+        primaryStage.sizeToScene();
         primaryStage.centerOnScreen();
+
+
+        primaryStage.setResizable(false);
 
 
         controller.onActivate();

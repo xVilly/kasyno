@@ -100,7 +100,7 @@ public class BlackJackManager {
         int playerPassedCardsCount = player.getCardsPassed();
         Card playerGivenCard = deck.get(0);
         deck.remove(playerGivenCard);
-        String imagePath = "/com/example/kasyno/pngcards/" + playerGivenCard.getName() + ".png";
+        String imagePath = "/Images/pngcards/" + playerGivenCard.getName() + ".png";
         playerGivenCard.setImagePath(imagePath);
         player.addToHand(playerGivenCard);
         player.addCardSum(playerGivenCard.getValue());
@@ -119,7 +119,7 @@ public class BlackJackManager {
         Card dealerGivenCard = deck.get(0);
         deck.remove(dealerGivenCard);
 
-        String dealerImagePath = "/com/example/kasyno/pngcards/" + dealerGivenCard.getName() + ".png";
+        String dealerImagePath = "/Images/pngcards/" + dealerGivenCard.getName() + ".png";
         dealerGivenCard.setImagePath(dealerImagePath);
         dealer.addToHand(dealerGivenCard);
         dealer.addCardSum(dealerGivenCard.getValue());

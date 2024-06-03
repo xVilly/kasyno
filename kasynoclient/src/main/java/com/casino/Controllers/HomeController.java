@@ -49,7 +49,7 @@ public class HomeController implements IController {
 
     @FXML
     void onPlayBlackjack(ActionEvent event) {
-
+        SceneManager.getInstance().openPopupWindow("Casino: BlackJack", "BlackJackController", "Casino: BlackJack", false, false);
     }
 
     @FXML
