@@ -6,13 +6,13 @@ import java.util.List;
 public class GameContext {
     private int id;
     private int type;
-    private List<String> players;
+    private String user;
     private HashMap<String, Integer> bets;
 
-    public GameContext(int id, int type, List<String> players, HashMap<String, Integer> bets) {
+    public GameContext(int id, int type, String user, double bet) {
         this.id = id;
         this.type = type;
-        this.players = players;
+        this.user = user;
         this.bets = bets;
     }
 
@@ -32,12 +32,12 @@ public class GameContext {
         this.type = type;
     }
 
-    public List<String> getPlayers() {
-        return players;
+    public String getUser() {
+        return user;
     }
 
-    public void setPlayers(List<String> players) {
-        this.players = players;
+    public void setUser(String user) {
+        this.user = user;
     }
 
     public HashMap<String, Integer> getBets() {

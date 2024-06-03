@@ -20,6 +20,16 @@ public class ClientHandler implements Runnable {
     private boolean failDuringInitialization = false;
     private String initializationError = "";
 
+    private String associatedUser = null;
+
+    public String getAssociatedUser() {
+        return associatedUser;
+    }
+
+    public void setAssociatedUser(String associatedUser) {
+        this.associatedUser = associatedUser;
+    }
+
     public ClientHandler(Socket clientSocket) {
         this.clientSocket = clientSocket;
         this.connectionId = UUID.randomUUID();
