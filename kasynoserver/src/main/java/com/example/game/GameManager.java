@@ -2,6 +2,7 @@ package com.example.game;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,40 +44,34 @@ public class GameManager {
             statement.setDouble(3, betAmount);
             statement.setDate(4, new java.sql.Date(System.currentTimeMillis()));
 
-
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected > 0) {
-                System.out.println("[casino-server] Game ");
-                return 1;
-            } else {
-                System.out.println("[casino-server] Failed to create user '"+username+"' account");
-                return 0;
+                ResultSet rs = statement.getGeneratedKeys();
+                if (rs.next()) {
+                    int id = rs.getInt(1);
+                    newGame.setId(id);
+                    return newGame;
+                }
             }
+            return null;
         } catch (SQLException e) {
-            System.out.println("[casino-server] Failed to create user '"+username+"' account: " + e.getMessage());
-            return 0;
-        }
-        games.add(newGame);
-        return newGame;
-    }
-
-    public int startGame(int gameType, double betAmount) {
-        
-        GameContext newGame = new GameContext(lastGameId, gameType,);
-        games.add(newGame);
-        return lastGameId;
-    }
-
-    public void joinGame(int gameId, String playerName, int betAmount) {
-        GameContext game = games.stream().filter(g -> g.getId() == gameId).findFirst().orElse(null);
-        if (game != null) {
-            game.getPlayers().add(playerName);
-            game.getBets().put(playerName, betAmount);
-            UserManager.getInstance().UpdateUserBalance(playerName, -betAmount);
+            System.out.println("[casino-server] Failed to insert a new game: " + e.getMessage());
+            return null;
+        } finally {
         }
     }
 
-    public void endGame(int gameId) {
-        games.remove(gameId);
+    public GameContext startGame(int gameType, double betAmount, String username) {
+        GameContext createdGame = createNewGame(gameType, betAmount, username);
+        if (createdGame == null) {
+            System.out.println("[casino-server] Failed to start a new game type " + gameType + " for user " + username);
+            return null;
+        }
+        games.add(createdGame);
+        return createdGame;
+    }
+
+    public GameContext onEndGame(int gameId, int result) {
+        return null;
     }
 }

@@ -36,4 +36,12 @@ public class OutgoingMessage {
     public ByteBuffer getBuffer() {
         return buffer;
     }
+
+    public void putDouble(double betAmount) {
+        try {
+            buffer.putDouble(betAmount);
+        } catch (BufferOverflowException ex) {
+            System.out.println("[casino-client] Buffer overflow on putDouble while handling opcode '"+this.opcode+"'.");
+        }
+    }
 }

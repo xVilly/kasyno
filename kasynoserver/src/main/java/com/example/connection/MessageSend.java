@@ -2,6 +2,7 @@ package com.example.connection;
 
 import java.nio.ByteBuffer;
 
+import com.example.game.GameContext;
 import com.example.user.LoginResponse;
 
 public class MessageSend {
@@ -36,6 +37,16 @@ public class MessageSend {
         OutgoingMessage msg = new OutgoingMessage((byte) 0x03, clientHandler);
         msg.putString(message);
         msg.putInt(messageType);
+        sendMessage(msg);
+    }
+
+    public void sendNewGameResponse(ClientHandler clientHandler, GameContext result) {
+        OutgoingMessage msg = new OutgoingMessage((byte) 0x03, clientHandler);
+        int success = (result != null) ? 1 : 0;
+        msg.putInt(success);
+        if (success == 1) {
+            msg.putInt(result.getId());
+        }
         sendMessage(msg);
     }
 }

@@ -10,6 +10,7 @@ import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
 import com.casino.Logic.Card;
+import com.casino.Connection.ConnectionManager;
 import com.casino.Logic.BlackJackManager;
 import com.casino.Logic.Player;
 
@@ -345,6 +346,9 @@ public class BlackJackController implements IController {
         int newplayerBalance = player.getBalance();
         newplayerBalance -= totalBetValue;
         player.setBalance(newplayerBalance);
+
+        ConnectionManager.getInstance().GetConnection().getMessageSender().sendGameStart(1, totalBetValue);
+
         betLabel.setText(betLabelText + "0");
         balanceLabel.setText(balanceLabelText + player.getBalance());
         totalBetValue = 0;

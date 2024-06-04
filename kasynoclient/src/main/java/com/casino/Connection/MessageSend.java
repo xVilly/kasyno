@@ -36,6 +36,13 @@ public class MessageSend {
         sendMessage(msg);
     }
 
+    public void sendGameStart(int gameType, double betAmount) {
+        OutgoingMessage msg = new OutgoingMessage((byte) 0x03);
+        msg.putInt(gameType);
+        msg.putDouble(betAmount);
+        sendMessage(msg);
+    }
+
     public void sendChatJoin() {
         OutgoingMessage msg = new OutgoingMessage((byte) 0x04);
         sendMessage(msg);

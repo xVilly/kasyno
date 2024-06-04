@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.sql.Connection;
 
 import com.example.chat.ChatManager;
+import com.example.game.GameContext;
 import com.example.game.GameManager;
 import com.example.user.LoginResponse;
 import com.example.user.UserManager;
@@ -84,12 +85,23 @@ public class MessageParse {
 
     private void parseGameStart(IncomingMessage msg) {
         int gameType = msg.getInt();
-        String username = msg.getString();
+        String username = msg.getSender().getAssociatedUser();
         int betAmount = msg.getInt();
-        int result = GameManager.getInstance().startGame(gameType);
-        if (result >= 0) {
-            GameManager.getInstance().joinGame(result, username, betAmount);
+        if (username.isEmpty()) {
+            ConnectionManager.getInstance().getMessageSender().sendNewGameResponse(msg.getSender(), null);
+            return;
         }
+        GameContext result = GameManager.getInstance().startGame(gameType, betAmount, username);
+        if (result != null) {
+            UserManager.getInstance().UpdateUserBalance(username, -betAmount);
+        }
+        ConnectionManager.getInstance().getMessageSender().sendNewGameResponse(msg.getSender(), result);
+    }
+
+    private void parseGameEnd(IncomingMessage msg) {
+        int gameId = msg.getInt();
+        int result = msg.getInt();
+        
     }
 
     private void parseChatJoin(IncomingMessage msg) {
