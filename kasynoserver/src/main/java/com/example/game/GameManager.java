@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +15,7 @@ import com.example.user.UserManager;
 public class GameManager {
     private static GameManager instance;
 
-    public List<GameContext> games;
+    public List<GameContext> games = new ArrayList<GameContext>();
     private int lastGameId = -1;
 
     private GameManager() {
@@ -37,7 +38,7 @@ public class GameManager {
         try {
             Connection db = DatabaseConnection.getConnection();
             String sql = "INSERT INTO `game-history` (id, type, user, bet, result, date) VALUES (NULL, ?, ?, ?, 0, ?)";
-            PreparedStatement statement = db.prepareStatement(sql);
+            PreparedStatement statement = db.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             statement.setInt(1, gameType);
             statement.setString(2, user);

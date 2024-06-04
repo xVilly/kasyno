@@ -41,7 +41,7 @@ public class MessageSend {
     }
 
     public void sendNewGameResponse(ClientHandler clientHandler, GameContext result) {
-        OutgoingMessage msg = new OutgoingMessage((byte) 0x03, clientHandler);
+        OutgoingMessage msg = new OutgoingMessage((byte) 0x04, clientHandler);
         int success = (result != null) ? 1 : 0;
         msg.putInt(success);
         if (success == 1) {

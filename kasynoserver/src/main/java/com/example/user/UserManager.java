@@ -97,13 +97,13 @@ public class UserManager {
         }
     }
 
-    public int UpdateUserBalance(String username, int balance) {
+    public int UpdateUserBalance(String username, double balance) {
         try {
             Connection db = DatabaseConnection.getConnection();
             String sql = "UPDATE `user-accounts` SET balance = ? WHERE name = ?";
             PreparedStatement statement = db.prepareStatement(sql);
 
-            statement.setInt(1, balance);
+            statement.setDouble(1, balance);
             statement.setString(2, username);
 
             int rowsAffected = statement.executeUpdate();

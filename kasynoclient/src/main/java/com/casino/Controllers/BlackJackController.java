@@ -11,6 +11,7 @@ import javafx.util.Duration;
 
 import com.casino.Logic.Card;
 import com.casino.Connection.ConnectionManager;
+import com.casino.Connection.IncomingMessage;
 import com.casino.Logic.BlackJackManager;
 import com.casino.Logic.Player;
 
@@ -57,6 +58,21 @@ public class BlackJackController implements IController {
     public void onActivate() {
         initbuttons();
         showBegginingLabel();
+
+        ConnectionManager.getInstance().GetConnection().registerCallback((byte)0x04, (IncomingMessage msg) -> {
+            onNewGameResultCallback(msg);
+        });
+    }
+
+    public void onNewGameResultCallback(IncomingMessage msg) {
+        int success = msg.getInt();
+        if (success == 1) {
+            int gameId = msg.getInt();
+            System.out.println("Received game start message: success (started game id "+gameId+")");
+        } else {
+            System.out.println("Received game start message: failed");
+
+        }
     }
 
     @FXML

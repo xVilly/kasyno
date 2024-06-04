@@ -86,7 +86,7 @@ public class MessageParse {
     private void parseGameStart(IncomingMessage msg) {
         int gameType = msg.getInt();
         String username = msg.getSender().getAssociatedUser();
-        int betAmount = msg.getInt();
+        double betAmount = msg.getDouble();
         if (username.isEmpty()) {
             ConnectionManager.getInstance().getMessageSender().sendNewGameResponse(msg.getSender(), null);
             return;
