@@ -62,6 +62,10 @@ public class MessageSend {
 
     public void sendGameHistory(ClientHandler clientHandler, List<GameContext> games) {
         OutgoingMessage msg = new OutgoingMessage((byte) 0x06, clientHandler);
+        // limit to 10 last games
+        if (games.size() > 10) {
+            games = games.subList(games.size() - 10, games.size());
+        }
         msg.putInt(games.size());
         for (GameContext game : games) {
             msg.putInt(game.getId());

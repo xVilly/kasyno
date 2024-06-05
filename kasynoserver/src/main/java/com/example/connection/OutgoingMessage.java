@@ -11,7 +11,7 @@ public class OutgoingMessage {
 
     public OutgoingMessage(byte opcode, ClientHandler sender) {
         this.opcode = opcode;
-        this.buffer = ByteBuffer.allocate(1024);
+        this.buffer = ByteBuffer.allocate(4096);
         this.sender = sender;
 
         buffer.put(opcode);
