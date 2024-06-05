@@ -17,6 +17,7 @@ public class SceneManager {
         add("LoginPage");
         add("HomePage");
         add("ChatPage");
+        add("GameHistory");
     }};
 
     public static final String startingScene = "LoginPage";
@@ -63,17 +64,11 @@ public class SceneManager {
             System.out.println("Scene "+name+" not found");
             return;
         }
-        if (primaryStage.getScene() == null)
-            primaryStage.setScene(new Scene(root));
-        else
-            primaryStage.getScene().setRoot(root);
+
+        primaryStage.setScene(new Scene(root));
 
         
-        primaryStage.setResizable(true);
-        primaryStage.sizeToScene();
         primaryStage.centerOnScreen();
-
-
         primaryStage.setResizable(false);
 
 

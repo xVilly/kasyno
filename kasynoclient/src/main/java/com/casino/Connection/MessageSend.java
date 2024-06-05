@@ -53,4 +53,12 @@ public class MessageSend {
         msg.putString(message);
         sendMessage(msg);
     }
+
+    public void sendGameEnd(int gameId, int result, double betAmount) {
+        OutgoingMessage msg = new OutgoingMessage((byte) 0x06);
+        msg.putInt(gameId);
+        msg.putInt(result);
+        msg.putDouble(betAmount);
+        sendMessage(msg);
+    }
 }

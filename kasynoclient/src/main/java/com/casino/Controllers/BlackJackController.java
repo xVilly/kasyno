@@ -14,6 +14,7 @@ import com.casino.Connection.ConnectionManager;
 import com.casino.Connection.IncomingMessage;
 import com.casino.Logic.BlackJackManager;
 import com.casino.Logic.Player;
+import com.casino.Logic.User;
 
 public class BlackJackController implements IController {
 
@@ -48,6 +49,8 @@ public class BlackJackController implements IController {
     private int nextCardPixelDraft = 50;
     private int playerBalanceBeforeBetting = 0;
 
+    private int currentGameId = -1;
+
     public BlackJackController()
     {
         this.totalBetValue = 0;
@@ -63,16 +66,32 @@ public class BlackJackController implements IController {
             onNewGameResultCallback(msg);
         });
     }
+    
+    public void requestStartGame() {
+        ConnectionManager.getInstance().GetConnection().getMessageSender().sendGameStart(1, totalBetValue);
+    }
 
     public void onNewGameResultCallback(IncomingMessage msg) {
         int success = msg.getInt();
         if (success == 1) {
             int gameId = msg.getInt();
-            System.out.println("Received game start message: success (started game id "+gameId+")");
+            currentGameId = gameId;
+            System.out.println("[casino-client] Received game start message: success (started game id "+gameId+")");
+            Platform.runLater(() -> placeBet());
         } else {
-            System.out.println("Received game start message: failed");
-
+            int errorCode = msg.getInt();
+            String errorMessage = msg.getString();
+            System.out.println("[casino-client] Received game start message: failed (error code "+errorCode+"): "+errorMessage);
         }
+    }
+
+    public void onBalanceUpdate(double newBalance) {
+        balanceLabel.setText(balanceLabelText + newBalance);
+    }
+
+    private void endGame(int result, double betMultiplier)
+    {
+        ConnectionManager.getInstance().GetConnection().getMessageSender().sendGameEnd(currentGameId, result, betMultiplier);
     }
 
     @FXML
@@ -81,7 +100,7 @@ public class BlackJackController implements IController {
 
         player = bjm.getPlayer();
 
-        balanceLabel.setText(balanceLabelText + player.getBalance());
+        onBalanceUpdate(User.getBalance());
         betLabel.setText(betLabelText + "0");
 //        orangeChiplayer.setOnAction(this::setBetValue1);
         orangeChip1.setOnAction(event -> setBetValue(1));
@@ -92,7 +111,7 @@ public class BlackJackController implements IController {
         redChip500.setOnAction(event -> setBetValue(500));
 
         clearButton.setOnAction(event -> clearBet());
-        betButton.setOnAction(event -> placeBet());
+        betButton.setOnAction(event -> requestStartGame());
 
         hitButton.setOnAction(event -> hitPlayerCard());
         stayButton.setOnAction(event -> stayButtonHandler());
@@ -158,7 +177,7 @@ public class BlackJackController implements IController {
 
     private void setBetValue(int betValue)
     {
-        if ((totalBetValue + betValue)  <= player.getBalance()) {
+        if ((totalBetValue + betValue)  <= User.getBalance()) {
             totalBetValue += betValue;
             player.setBetValue(betValue);
             String currentBetText = betLabelText + totalBetValue;
@@ -166,9 +185,9 @@ public class BlackJackController implements IController {
         }
         else
         {
-            totalBetValue = player.getBalance();
+            totalBetValue = (int)User.getBalance();
             player.setBetValue(betValue);
-            betLabel.setText(betLabelText + player.getBalance());
+            betLabel.setText(betLabelText + User.getBalance());
         }
         player.setTotalRoundBet(totalBetValue);
     }
@@ -187,8 +206,9 @@ public class BlackJackController implements IController {
         {
             dealerLabel.setText("It's a draw!");
             player.setBalance(playerBalanceBeforeBetting );
-            balanceLabel.setText(balanceLabelText + player.getBalance());
             previousGameLabel.setText(prevGameLabelText + "+" +player.getTotalRoundBet() );
+
+            endGame(3, 1.0);
 
             playAgainButton.setDisable(false);
             playAgainButton.setVisible(true);
@@ -197,19 +217,20 @@ public class BlackJackController implements IController {
 
             dealerLabel.setText("You won!");
             player.setBalance(playerBalanceBeforeBetting+  player.getTotalRoundBet() );
-            balanceLabel.setText(balanceLabelText+ player.getBalance());
             previousGameLabel.setText(prevGameLabelText + "+" + (2 * player.getTotalRoundBet()) );
             playAgainButton.setDisable(false);
             playAgainButton.setVisible(true);
+            endGame(1, 2.0);
         }
         else
         {
             dealerLabel.setText("You lost!");
             previousGameLabel.setText(prevGameLabelText + "-" +player.getTotalRoundBet() );
             player.setBalance(playerBalanceBeforeBetting - player.getTotalRoundBet());
-            balanceLabel.setText(balanceLabelText+ player.getBalance());
             playAgainButton.setDisable(false);
             playAgainButton.setVisible(true);
+
+            endGame(2, 0.0);
         }
 
         playDealerCardAnimation();
@@ -225,10 +246,13 @@ public class BlackJackController implements IController {
         {
             dealerLabel.setText("You lost!");
             previousGameLabel.setText(prevGameLabelText + "-" + player.getTotalRoundBet() );
-            balanceLabel.setText(balanceLabelText+ (playerBalanceBeforeBetting - player.getTotalRoundBet()));
+            // balanceLabel.setText(balanceLabelText+ (playerBalanceBeforeBetting - player.getTotalRoundBet()));
             playDealerCardAnimation();
             playAgainButton.setDisable(false);
             playAgainButton.setVisible(true);
+
+            endGame(2, 0);
+
         }
         else
         {
@@ -265,10 +289,12 @@ public class BlackJackController implements IController {
         if(dealer.getHandVal() == 21 && player.getHandVal() < 21)
         {
             dealerLabel.setText("You get the insurance!");
-            player.setBalance(playerBalanceBeforeBetting - player.getTotalRoundBet() + insuaranceValue );
+            player.setBalance(playerBalanceBeforeBetting - player.getTotalRoundBet() + insuaranceValue);
             previousGameLabel.setText(prevGameLabelText + "+" + insuaranceValue*2);
-            balanceLabel.setText(balanceLabelText+ player.getBalance());
+            // balanceLabel.setText(balanceLabelText+ player.getBalance());
             playDealerCardAnimation();
+
+            endGame(1, 0.5);
 
             playAgainButton.setDisable(false);
             playAgainButton.setVisible(true);
@@ -287,7 +313,8 @@ public class BlackJackController implements IController {
             }
             dealerLabel.setText("...");
             player.setBalance(playerBalanceBeforeBetting - insuaranceValue - player.getTotalRoundBet());
-            balanceLabel.setText(balanceLabelText+ player.getBalance());
+            // balanceLabel.setText(balanceLabelText+ player.getBalance());
+            endGame(2, -0.5);
         }
 
     }
@@ -305,11 +332,12 @@ public class BlackJackController implements IController {
         if(player.getHandVal() > 21)
         {
             dealerLabel.setText("You lost!");
-            previousGameLabel.setText(prevGameLabelText + "-" +player.getTotalRoundBet() );
+            previousGameLabel.setText(prevGameLabelText + "-" +2*player.getTotalRoundBet() );
             player.setBalance(playerBalanceBeforeBetting - 2* player.getTotalRoundBet());
-            balanceLabel.setText(balanceLabelText+ player.getBalance());
+            // balanceLabel.setText(balanceLabelText+ player.getBalance());
             playAgainButton.setDisable(false);
             playAgainButton.setVisible(true);
+            endGame(2, -1.0);
             return;
         }
         stayButtonHandler();
@@ -354,21 +382,12 @@ public class BlackJackController implements IController {
 
     private void placeBet()
     {
-        playerBalanceBeforeBetting = player.getBalance();
         if(player.getBetValue() == 0)
         {
             return;
         }
-        int newplayerBalance = player.getBalance();
-        newplayerBalance -= totalBetValue;
-        player.setBalance(newplayerBalance);
-
-        ConnectionManager.getInstance().GetConnection().getMessageSender().sendGameStart(1, totalBetValue);
-
         betLabel.setText(betLabelText + "0");
-        balanceLabel.setText(balanceLabelText + player.getBalance());
         totalBetValue = 0;
-
 
         betButton.setDisable(true);
         orangeChip1.setDisable(true);
@@ -461,11 +480,13 @@ public class BlackJackController implements IController {
             //nowa zmiana
 //            player.setBalance(player.getBalance() + player.getTotalRoundBet());
             player.setBalance(playerBalanceBeforeBetting + 2* player.getTotalRoundBet());
-            Platform.runLater(() -> balanceLabel.setText(balanceLabelText + player.getBalance()));
+            // Platform.runLater(() -> balanceLabel.setText(balanceLabelText + player.getBalance()));
             Platform.runLater(() -> previousGameLabel.setText(prevGameLabelText + "+" + 2 * player.getTotalRoundBet()));
             Platform.runLater(() -> cardsValLabel.setText(cardValLabelText + totalPlayerCardsValue));
             playAgainButton.setVisible(true);
             playAgainButton.setDisable(false);
+
+            endGame(1, 2.0);
             return;
         } else if (player.getHandVal() > 21 && player.hasAce()) {
             player.changeAceValues();
@@ -474,9 +495,13 @@ public class BlackJackController implements IController {
 
             Platform.runLater(()-> dealerLabel.setText("You lost!"));
             Platform.runLater(() -> previousGameLabel.setText(prevGameLabelText + "-" +player.getTotalRoundBet() ));
-            Platform.runLater(() -> balanceLabel.setText(balanceLabelText+ (playerBalanceBeforeBetting - player.getTotalRoundBet())));
+            // Platform.runLater(() -> balanceLabel.setText(balanceLabelText+ (playerBalanceBeforeBetting - player.getTotalRoundBet())));
             //???
 //            Platform.runLater(() -> balanceLabel.setText(balanceLabelText+ (playerBalanceBeforeBetting - player.getTotalRoundBet())));
+            playAgainButton.setVisible(true);
+            playAgainButton.setDisable(false);
+            endGame(2, 0.0);
+            return;
         } else
         {
             stayButton.setDisable(false);
@@ -646,9 +671,11 @@ public class BlackJackController implements IController {
         if (player.getHandVal() == 21) {
             dealerLabel.setText("You won!");
             player.setBalance(playerBalanceBeforeBetting +  player.getTotalRoundBet());
-            balanceLabel.setText(balanceLabelText + player.getBalance());
+            // balanceLabel.setText(balanceLabelText + player.getBalance());
             previousGameLabel.setText(prevGameLabelText + "+" + 2 * player.getTotalRoundBet() );
             playAgainButton.setVisible(true);
+            playAgainButton.setDisable(false);
+            endGame(1, 2.0);
 
         } else if (player.getHandVal() > 21 && player.hasAce()) {
             player.changeAceValues();

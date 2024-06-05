@@ -71,4 +71,8 @@ public class ConnectionManager {
         }
         return userConnections;
     }
+
+    public List<ClientHandler> getClientConnections() {
+        return clientConnections;
+    }
 }

@@ -2,6 +2,7 @@ package com.casino.Connection;
 
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
+import java.util.Date;
 
 public class IncomingMessage {
     private byte opcode;
@@ -58,5 +59,15 @@ public class IncomingMessage {
 
     public int getSize() {
         return size;
+    }
+
+    public long getLong() {
+        long result = 0;
+        try {
+            result = buffer.getLong();
+        } catch (BufferUnderflowException ex) {
+            System.out.println("[casino-server] Buffer underflow on getLong while handling opcode '"+this.opcode+"'.");
+        }
+        return result;
     }
 }

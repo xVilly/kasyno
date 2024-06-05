@@ -5,6 +5,7 @@ import javax.swing.Action;
 import com.casino.Connection.ConnectionManager;
 import com.casino.Connection.IncomingMessage;
 import com.casino.Connection.ServerConnection;
+import com.casino.Logic.User;
 
 import javafx.application.Platform;
 
@@ -94,6 +95,7 @@ public class LoginController implements IController {
             Platform.runLater(() -> {
                 SceneManager.getInstance().activate("HomePage");
             });
+            User.Setup();
             String username = msg.getString();
             double balance = msg.getDouble();
             HomeController controller = (HomeController)SceneManager.getInstance().getController("HomePage");
@@ -101,14 +103,16 @@ public class LoginController implements IController {
                 return;
             }
             Platform.runLater(() -> {
-                controller.setup(username, balance);
+                controller.setup(username);
             });
+
+            User.setBalance(balance);
         } else {
             Platform.runLater(() -> {
-            loginError.setVisible(true);
-            loginError.setDisable(false);
-            loginError.setText("Invalid username or password.");
-            loginError.setTextFill(Paint.valueOf("#b0453e"));
+                loginError.setVisible(true);
+                loginError.setDisable(false);
+                loginError.setText("Invalid username or password.");
+                loginError.setTextFill(Paint.valueOf("#b0453e"));
             });
         }
     }

@@ -50,4 +50,12 @@ public class OutgoingMessage {
     public ClientHandler getSender() {
         return sender;
     }
+
+    public void putLong(long date) {
+        try {
+            buffer.putLong(date);
+        } catch (BufferOverflowException ex) {
+            System.out.println("[casino-server] Buffer overflow on putLong while handling opcode '"+this.opcode+"'.");
+        }
+    }
 }

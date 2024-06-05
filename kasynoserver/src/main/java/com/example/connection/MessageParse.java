@@ -6,6 +6,7 @@ import java.sql.Connection;
 import com.example.chat.ChatManager;
 import com.example.game.GameContext;
 import com.example.game.GameManager;
+import com.example.game.structures.StartGameResult;
 import com.example.user.LoginResponse;
 import com.example.user.UserManager;
 
@@ -50,6 +51,11 @@ public class MessageParse {
             case 0x05:
                 parseChatMessage(msg);
                 break;
+
+            /* 0x06: End Game */
+            case 0x06:
+                parseGameEnd(msg);
+                break;
             
             default:
                 System.out.println("[casino-server] Received unknown opcode "+opcode+" from client '"+clientHandler.getIpAddress()+"' (id "+clientHandler.getConnectionId()+")");
@@ -81,6 +87,10 @@ public class MessageParse {
             msg.getSender().setAssociatedUser(name);
         }
         ConnectionManager.getInstance().getMessageSender().sendAuthenticationResponse(msg.getSender(), response);
+
+        if (response.getResult() == 1) {
+            ConnectionManager.getInstance().getMessageSender().sendGameHistory(msg.getSender(), GameManager.getInstance().getGameHistory());
+        }
     }
 
     private void parseGameStart(IncomingMessage msg) {
@@ -91,17 +101,16 @@ public class MessageParse {
             ConnectionManager.getInstance().getMessageSender().sendNewGameResponse(msg.getSender(), null);
             return;
         }
-        GameContext result = GameManager.getInstance().startGame(gameType, betAmount, username);
-        if (result != null) {
-            UserManager.getInstance().UpdateUserBalance(username, -betAmount);
-        }
+        
+        StartGameResult result = GameManager.getInstance().startGame(gameType, betAmount, username);
         ConnectionManager.getInstance().getMessageSender().sendNewGameResponse(msg.getSender(), result);
     }
 
     private void parseGameEnd(IncomingMessage msg) {
         int gameId = msg.getInt();
         int result = msg.getInt();
-        
+        double betMultiplier = msg.getDouble();
+        GameManager.getInstance().endGame(gameId, result, betMultiplier);
     }
 
     private void parseChatJoin(IncomingMessage msg) {

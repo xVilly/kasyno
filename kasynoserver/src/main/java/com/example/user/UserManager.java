@@ -10,6 +10,8 @@ import javax.naming.spi.DirStateFactory.Result;
 import com.example.connection.ClientHandler;
 import com.example.connection.ConnectionManager;
 import com.example.database.DatabaseConnection;
+import com.example.game.GameManager;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -97,7 +99,7 @@ public class UserManager {
         }
     }
 
-    public int UpdateUserBalance(String username, double balance) {
+    public boolean UpdateUserBalance(String username, double balance) {
         try {
             Connection db = DatabaseConnection.getConnection();
             String sql = "UPDATE `user-accounts` SET balance = ? WHERE name = ?";
@@ -109,14 +111,15 @@ public class UserManager {
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("[casino-server] User '"+username+"' balance updated successfully");
-                return 1;
+                sendUserBalanceUpdate(username, balance);
+                return true;
             } else {
                 System.out.println("[casino-server] Failed to update user '"+username+"' balance");
-                return 0;
+                return false;
             }
         } catch (SQLException e) {
             System.out.println("[casino-server] Failed to update user '"+username+"' balance: " + e.getMessage());
-            return 0;
+            return false;
         }
     }
 
@@ -134,4 +137,10 @@ public class UserManager {
         }
     }
 
+
+    private void sendUserBalanceUpdate(String username, double balance) {
+        ConnectionManager.getInstance().getUserConnections(username).forEach(client -> {
+            ConnectionManager.getInstance().getMessageSender().sendUserBalanceUpdate(client, balance);
+        });
+    }
 }

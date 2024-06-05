@@ -13,8 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="700.0" maxWidth="900.0" minHeight="700.0" minWidth="900.0" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: green;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.casino.Controllers.HomeController">
+<AnchorPane maxHeight="700.0" maxWidth="900.0" minHeight="700.0" minWidth="900.0" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: linear-gradient(from 15% 15% to 100% 100%, #22ba20, #136312); -fx-border-color: black;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.casino.Controllers.HomeController">
    <children>
       <AnchorPane maxHeight="185.0" minHeight="185.0" prefHeight="185.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0">
          <children>
@@ -78,7 +77,7 @@
                <children>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onOpenChat" style="-fx-background-color: #517030; -fx-text-fill: white;" text="Open Chat" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onOpenChat" style="-fx-background-color: linear-gradient(to bottom, #139451, #056634); -fx-text-fill: white; -fx-border-color: black;" text="Open Chat" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                            <font>
                               <Font name="Dubai Regular" size="18.0" />
                            </font>
@@ -87,7 +86,7 @@
                   </AnchorPane>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                      <children>
-                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onShowLeaderboard" style="-fx-background-color: #517030; -fx-text-fill: white;" text="Show Leaderboard" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
+                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onShowLeaderboard" style="-fx-background-color: linear-gradient(to bottom, #139451, #056634); -fx-text-fill: white; -fx-border-color: black;" text="Buy Chips" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
                            <font>
                               <Font name="Dubai Regular" size="18.0" />
                            </font>
@@ -96,7 +95,7 @@
                   </AnchorPane>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
                      <children>
-                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onGameHistory" style="-fx-background-color: #517030; -fx-text-fill: white;" text="Game History" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onGameHistory" style="-fx-background-color: linear-gradient(to bottom, #139451, #056634); -fx-text-fill: white; -fx-border-color: black;" text="Game History" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                            <font>
                               <Font name="Dubai Regular" size="18.0" />
                            </font>
@@ -118,7 +117,7 @@
          <children>
             <AnchorPane prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <GridPane fx:id="gridBlackjack" style="-fx-background-color: #284f1d;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
+                  <GridPane fx:id="gridBlackjack" style="-fx-background-color: linear-gradient(to bottom, #18702f, #104a16); -fx-border-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
@@ -139,7 +138,7 @@
                         </AnchorPane>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0">
                            <children>
-                              <ImageView fx:id="thumbBlackjack" fitHeight="200.0" fitWidth="440.0" pickOnBounds="true" AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <ImageView fx:id="thumbBlackjack" fitHeight="200.0" fitWidth="438.0" pickOnBounds="true" style="-fx-opacity: 0.8;" AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <image>
                                     <Image url="@../Images/blackjack-thumb.jpeg" />
                                  </image>
@@ -164,7 +163,7 @@
             </AnchorPane>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                <children>
-                  <GridPane fx:id="gridRoulette" style="-fx-background-color: #781422;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <GridPane fx:id="gridRoulette" style="-fx-background-color: linear-gradient(to bottom, #781422, #540e18); -fx-border-color: black;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                      </columnConstraints>
@@ -185,7 +184,7 @@
                         </AnchorPane>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0">
                            <children>
-                              <ImageView fx:id="thumbRoulette" fitHeight="200.0" fitWidth="440.0" pickOnBounds="true" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <ImageView fx:id="thumbRoulette" fitHeight="200.0" fitWidth="438.0" pickOnBounds="true" style="-fx-opacity: 0.8;" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <image>
                                     <Image url="@../Images/roulette-thumb.jpg" />
                                  </image>

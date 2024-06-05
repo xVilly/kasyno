@@ -1,8 +1,10 @@
 package com.example.connection;
 
 import java.nio.ByteBuffer;
+import java.util.List;
 
 import com.example.game.GameContext;
+import com.example.game.structures.StartGameResult;
 import com.example.user.LoginResponse;
 
 public class MessageSend {
@@ -40,12 +42,35 @@ public class MessageSend {
         sendMessage(msg);
     }
 
-    public void sendNewGameResponse(ClientHandler clientHandler, GameContext result) {
+    public void sendNewGameResponse(ClientHandler clientHandler, StartGameResult result) {
         OutgoingMessage msg = new OutgoingMessage((byte) 0x04, clientHandler);
-        int success = (result != null) ? 1 : 0;
-        msg.putInt(success);
-        if (success == 1) {
-            msg.putInt(result.getId());
+        msg.putInt(result.success ? 1 : 0);
+        if (result.success) {
+            msg.putInt(result.game.getId());
+        } else {
+            msg.putInt(result.errorCode);
+            msg.putString(result.errorMessage);
+        }
+        sendMessage(msg);
+    }
+
+    public void sendUserBalanceUpdate(ClientHandler clientHandler, double balance) {
+        OutgoingMessage msg = new OutgoingMessage((byte) 0x05, clientHandler);
+        msg.putDouble(balance);
+        sendMessage(msg);
+    }
+
+    public void sendGameHistory(ClientHandler clientHandler, List<GameContext> games) {
+        OutgoingMessage msg = new OutgoingMessage((byte) 0x06, clientHandler);
+        msg.putInt(games.size());
+        for (GameContext game : games) {
+            msg.putInt(game.getId());
+            msg.putInt(game.getType());
+            msg.putString(game.getUser());
+            msg.putDouble(game.getBet());
+            msg.putInt(game.getResult());
+            msg.putDouble(game.getBetMultiplier());
+            msg.putLong(game.getDate());
         }
         sendMessage(msg);
     }
