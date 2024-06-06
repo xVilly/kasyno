@@ -25,6 +25,7 @@ public class MessageParse {
         switch(opcode) {
             /* 0x00: Keep Alive (no response) */
             case 0x00:
+                parseClientPing(msg);
                 break;
 
             /* 0x01: Create Account */
@@ -65,6 +66,10 @@ public class MessageParse {
         if (msg.getUnreadSize() > 0) {
             System.out.println("[casino-server] MessageParse left "+msg.getUnreadSize()+" unread bytes (opcode "+opcode+") from client '"+clientHandler.getIpAddress()+"' (id "+clientHandler.getConnectionId()+")");
         }
+    }
+
+    private void parseClientPing(IncomingMessage msg) {
+        ConnectionManager.getInstance().getMessageSender().sendPingResponse(msg.getSender());
     }
 
 

@@ -26,10 +26,7 @@ public class GameHistoryController implements IController {
     private ScrollPane scrollPane;
 
     public GameHistoryController() {
-        ServerConnection connection = ConnectionManager.getInstance().GetConnection();
-        connection.registerCallback((byte)0x06, (IncomingMessage msg) -> {
-            onGameHistoryCallback(msg);
-        });
+        
     }
 
     public void onGameHistoryCallback(IncomingMessage msg) {
@@ -98,7 +95,7 @@ public class GameHistoryController implements IController {
             gameResult.setText("Result: Draw (" + game.betMultiplier + "x)");
             gameResult.setStyle("-fx-text-fill: #99a2ff;");
         } else {
-            gameResult.setText("Result: Pending");
+            gameResult.setText("Result: In progress..");
             gameResult.setStyle("-fx-text-fill: #ccfff7");
         }
         gameResult.setFont(new javafx.scene.text.Font("Consolas", 18));

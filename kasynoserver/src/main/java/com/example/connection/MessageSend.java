@@ -19,6 +19,11 @@ public class MessageSend {
         }
     }
 
+    public void sendPingResponse(ClientHandler clientHandler) {
+        OutgoingMessage msg = new OutgoingMessage((byte) 0x00, clientHandler);
+        sendMessage(msg);
+    }
+
     public void sendCreateAccountResponse(ClientHandler clientHandler, boolean success) {
         OutgoingMessage msg = new OutgoingMessage((byte) 0x01, clientHandler);
         msg.putInt(success ? 1 : 0);

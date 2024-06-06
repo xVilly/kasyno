@@ -57,7 +57,7 @@ public class ClientHandler implements Runnable {
     
     public void listenForPackets() throws IOException, InterruptedException
     {
-        byte[] receivedData = new byte[1024];
+        byte[] receivedData = new byte[4096];
         int bytesRead;
         while ((bytesRead = inputStream.read(receivedData)) != -1) {
             // Process received data

@@ -48,7 +48,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<FlowPane alignment="CENTER" maxHeight="400.0" maxWidth="600.0" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: green;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.casino.Controllers.LoginController">
+<FlowPane alignment="CENTER" maxHeight="400.0" maxWidth="600.0" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: linear-gradient(from 15% 15% to 100% 100%, #167315, #0f4f0e); -fx-border-color: black;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.casino.Controllers.LoginController">
    <children>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="297.0">
          <children>
@@ -121,6 +121,30 @@
                   <Font name="JetBrains Mono Medium" size="14.0" />
                </font>
             </Label>
+            <Button fx:id="buttonLogin1" mnemonicParsing="false" onAction="#onConnectionSettings" text="Connection Settings">
+               <font>
+                  <Font name="JetBrains Mono ExtraBold" size="12.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <textFill>
+                  <LinearGradient endX="0.04739336492891" endY="1.0">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="0.46052631735801697" green="0.46052631735801697" blue="0.46052631735801697" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </textFill>
+            </Button>
          </children>
          <padding>
             <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />

@@ -32,13 +32,7 @@ public class LoginController implements IController {
     private Label loginError;
 
     public LoginController() {
-        ServerConnection connection = ConnectionManager.getInstance().GetConnection();
-        connection.registerCallback((byte)0x02, (IncomingMessage msg) -> {
-            onLoginCallback(msg);
-        });
-        connection.registerCallback((byte)0x01, (IncomingMessage msg) -> {
-            onRegisterCallback(msg);
-        });
+        
     }
 
     // Interface methods
@@ -61,6 +55,14 @@ public class LoginController implements IController {
             return;
         }
 
+        if (!ConnectionManager.getInstance().isConnected()) {
+            loginError.setVisible(true);
+            loginError.setDisable(false);
+            loginError.setText("Please connect to the server first.");
+            loginError.setTextFill(Paint.valueOf("#b0453e"));
+            return;
+        }
+
         ServerConnection connection = ConnectionManager.getInstance().GetConnection();
         connection.getMessageSender().sendCreateAccount(textValueUsername.getText(), textValuePassword.getText(), "", "", 0);
     }
@@ -76,11 +78,24 @@ public class LoginController implements IController {
     }
 
     @FXML
+    void onConnectionSettings(ActionEvent event) {
+        SceneManager.getInstance().openPopupWindow("Connection Settings", "ConnectWindow", "Connection Settings", false, false);
+    }
+
+    @FXML
     void onLogin(ActionEvent event) {
         if (textValueUsername.getText().isEmpty() || textValuePassword.getText().isEmpty()) {
             loginError.setVisible(true);
             loginError.setDisable(false);
             loginError.setText("Please fill in all the fields.");
+            loginError.setTextFill(Paint.valueOf("#b0453e"));
+            return;
+        }
+
+        if (!ConnectionManager.getInstance().isConnected()) {
+            loginError.setVisible(true);
+            loginError.setDisable(false);
+            loginError.setText("Please connect to the server first.");
             loginError.setTextFill(Paint.valueOf("#b0453e"));
             return;
         }
@@ -134,5 +149,14 @@ public class LoginController implements IController {
             loginError.setTextFill(Paint.valueOf("#b0453e"));
             });
         }
+    }
+
+    void onDisconnect() {
+        Platform.runLater(() -> {
+            loginError.setVisible(true);
+            loginError.setDisable(false);
+            loginError.setText("Disconnected from server.");
+            loginError.setTextFill(Paint.valueOf("#b0453e"));
+        });
     }
 }
