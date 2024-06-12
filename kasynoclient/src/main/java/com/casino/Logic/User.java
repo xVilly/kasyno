@@ -4,6 +4,7 @@ import com.casino.Connection.ConnectionManager;
 import com.casino.Connection.IncomingMessage;
 import com.casino.Controllers.BlackJackController;
 import com.casino.Controllers.HomeController;
+import com.casino.Controllers.RouletteController;
 import com.casino.Controllers.SceneManager;
 
 import javafx.application.Platform;
@@ -34,17 +35,18 @@ public class User {
         //* Update the UI */
         Platform.runLater(() -> {
             BlackJackController blackJack = SceneManager.getInstance().getController("BlackJackController");
-            System.out.println("t1");
             if (blackJack != null) {
-                System.out.println("t2");
                 blackJack.onBalanceUpdate(newBalance);
             }
 
             HomeController home = SceneManager.getInstance().getController("HomePage");
-            
             if (home != null) {
-            
                 home.onBalanceUpdate(newBalance);
+            }
+
+            RouletteController roulette = SceneManager.getInstance().getController("RouletteController");
+            if (roulette != null) {
+                roulette.onBalanceUpdate(newBalance);
             }
         });
     }

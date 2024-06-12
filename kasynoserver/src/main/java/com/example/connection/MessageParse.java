@@ -8,6 +8,7 @@ import com.example.game.GameContext;
 import com.example.game.GameManager;
 import com.example.game.structures.StartGameResult;
 import com.example.user.LoginResponse;
+import com.example.user.UserContext;
 import com.example.user.UserManager;
 
 public class MessageParse {
@@ -56,6 +57,11 @@ public class MessageParse {
             /* 0x06: End Game */
             case 0x06:
                 parseGameEnd(msg);
+                break;
+
+            /* 0x07: Buy Chips */
+            case 0x07:
+                parseBuyChips(msg);
                 break;
             
             default:
@@ -133,6 +139,16 @@ public class MessageParse {
 
         String message = msg.getString();
         ChatManager.getInstance().onUserMessage(username, message);
+    }
+
+    private void parseBuyChips(IncomingMessage msg) {
+        double amount = msg.getDouble();
+        String username = msg.getSender().getAssociatedUser();
+        if (username == null)
+            return;
+
+        UserContext userData = UserManager.getInstance().GetUserData(username);
+        UserManager.getInstance().UpdateUserBalance(username, userData.getBalance() + amount);
     }
 
 }

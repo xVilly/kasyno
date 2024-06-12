@@ -11,7 +11,7 @@ public class RoulettePlayer {
     private int balance;
     private int betValue;
     private int totalRoundBet;
-
+    public int currentGameId = -1;
 
 
     private int latestWinnings;

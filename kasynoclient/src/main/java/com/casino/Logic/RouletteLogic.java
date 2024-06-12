@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.casino.Connection.ConnectionManager;
+
 public class RouletteLogic {
 
     private final List<RouletteNumber> rouletteNumbers = new ArrayList<>();
@@ -55,6 +57,7 @@ public class RouletteLogic {
     public void checkIfPlayerWins(int rolledNumber)
     {
         int totalWinnings = 0;
+        double percentageChange = 0;
         if(rolledNumber == 0 )
         {
             for(Bet bet : roulettePlayer.getBetRouletteNumbers())
@@ -62,6 +65,7 @@ public class RouletteLogic {
                 if(bet.getNumbers().contains(0))
                 {
                     totalWinnings += bet.getAmount() * 35;
+                    percentageChange = 35;
                 }
             }
         }
@@ -73,21 +77,25 @@ public class RouletteLogic {
                 if (bet.getNumbers().contains(rolledNumber) && bet.getNumbers().size() == 1) {
 
                     totalWinnings += bet.getAmount() * 35;
+                    percentageChange = 35;
 
                 } else if (bet.getNumbers().contains(rolledNumber) && bet.getNumbers().size() == 12) {
 
                     totalWinnings += bet.getAmount() * 3;
+                    percentageChange = 3;
                 } else if (bet.getNumbers().contains(rolledNumber)) {
 
                     totalWinnings += bet.getAmount() * 2;
+                    percentageChange = 2;
                 }
             }
         }
         //ZMIANA BALANSU - dodanie ewentualnych wygranych
-        roulettePlayer.setBalance(roulettePlayer.getBalance() + totalWinnings);
         roulettePlayer.setLatestWinnings(totalWinnings);
-        System.out.println("NEW PLAYER BALANCE");
-        System.out.println(roulettePlayer.getBalance());
+
+        // calculate totalWinnings into percentage change
+        ConnectionManager.getInstance().GetConnection().getMessageSender().sendGameEnd(roulettePlayer.currentGameId, totalWinnings > 0 ? 1 : 2, percentageChange);
+        
     }
 
     public List<RouletteNumber> getRouletteNumbers() {

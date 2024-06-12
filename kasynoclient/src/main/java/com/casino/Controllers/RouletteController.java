@@ -1,6 +1,7 @@
 package com.casino.Controllers;
 
 import javafx.animation.RotateTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,13 +12,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.casino.Connection.ConnectionManager;
+import com.casino.Connection.IncomingMessage;
 import com.casino.Logic.*;
 
 
 public class RouletteController implements IController {
 
     public void onActivate() {
-
+        ConnectionManager.getInstance().GetConnection().registerCallback((byte)0x04, (IncomingMessage msg) -> {
+            onNewGameResultCallback(msg);
+        });
     }
 
     @FXML
@@ -49,12 +54,34 @@ public class RouletteController implements IController {
     private final RouletteLogic rouletteLogic = new RouletteLogic();
     private int totalBetValue = 0;
     private int playerBalanceBeforeBetting = 0;
-    private int playerBalanceAfterBetting = 1000;
+    private int playerBalanceAfterBetting = 0;
     private int playerWholeRoundBet=0;
     private final RoulettePlayer roulettePlayer = rouletteLogic.getRoulettePlayer();
     private double newAngle = 0;
+    private List<RouletteNumber> rouletteNumbers;
 
-    private List<RouletteNumber> rouletteNumbers ;
+    public void onBalanceUpdate(double newBalance) {
+        balanceLabel.setText(balanceLabelText + newBalance);
+        roulettePlayer.setBalance((int)newBalance);
+    }
+
+    public void requestStartGame() {
+        ConnectionManager.getInstance().GetConnection().getMessageSender().sendGameStart(2, totalBetValue);
+    }
+
+    public void onNewGameResultCallback(IncomingMessage msg) {
+        int success = msg.getInt();
+        if (success == 1) {
+            int gameId = msg.getInt();
+            roulettePlayer.currentGameId = gameId;
+            System.out.println("[casino-client] Received game start message: success (started game id "+gameId+")");
+            Platform.runLater(() -> spinTheWheel());
+        } else {
+            int errorCode = msg.getInt();
+            String errorMessage = msg.getString();
+            System.out.println("[casino-client] Received game start message: failed (error code "+errorCode+"): "+errorMessage);
+        }
+    }
 
     @FXML
     public void initialize() {
@@ -64,6 +91,11 @@ public class RouletteController implements IController {
 
     private void spinTheWheel()
     {
+        playerBalanceAfterBetting -= totalBetValue;
+        betLabel.setText(betLabelText + "0");
+        totalBetValue = 0;
+        roulettePlayer.setTotalRoundBet(totalBetValue);
+
         orangeChip1.setDisable(true);
         blueChip5.setDisable(true);
         greenChip10.setDisable(true);
@@ -147,7 +179,7 @@ public class RouletteController implements IController {
 
         clearButton.setOnAction(event -> clearBet());
         clearTableButton.setOnAction(event -> clearTable());
-        rollButton.setOnAction(event -> spinTheWheel());
+        rollButton.setOnAction(event -> requestStartGame());
         rollButton.setDisable(true);
         clearTableButton.setDisable(true);
 
@@ -196,8 +228,6 @@ public class RouletteController implements IController {
         // clear selected roulette numbers
         roulettePlayer.getBetRouletteNumbers().clear();
         //ZMIANA BALANSU - OBSTAWIANIE - ZWROT PO WYCZYSZCZENIU OBSTAWIONYCH NUMEROW
-        roulettePlayer.setBalance(playerBalanceAfterBetting+ playerWholeRoundBet);
-        balanceLabel.setText(balanceLabelText + (playerBalanceAfterBetting+ playerWholeRoundBet));
         playerWholeRoundBet = 0;
         playerBalanceBeforeBetting = 0;
         clearTableButton.setDisable(true);
@@ -230,14 +260,8 @@ public class RouletteController implements IController {
         playerBalanceBeforeBetting = roulettePlayer.getBalance();
         totalBetValue = roulettePlayer.getTotalRoundBet();
         playerWholeRoundBet+= totalBetValue;
-        int newplayerBalance = roulettePlayer.getBalance() - totalBetValue;
         //ZMIANA BALANSU - ODJECIE PO OBSTAWIENIU
-        roulettePlayer.setBalance(newplayerBalance);
-        playerBalanceAfterBetting -= totalBetValue;
-        betLabel.setText(betLabelText + "0");
-        balanceLabel.setText(balanceLabelText + roulettePlayer.getBalance());
-        totalBetValue = 0;
-        roulettePlayer.setTotalRoundBet(totalBetValue);
+        
 
         rollButton.setDisable(false);
         clearTableButton.setDisable(false);

@@ -61,4 +61,10 @@ public class MessageSend {
         msg.putDouble(betAmount);
         sendMessage(msg);
     }
+
+    public void sendBuyChips(double amount) {
+        OutgoingMessage msg = new OutgoingMessage((byte) 0x07);
+        msg.putDouble(amount);
+        sendMessage(msg);
+    }
 }
