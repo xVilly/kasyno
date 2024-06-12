@@ -86,7 +86,7 @@
                   </AnchorPane>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                      <children>
-                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onShowLeaderboard" style="-fx-background-color: linear-gradient(to bottom, #139451, #056634); -fx-text-fill: white; -fx-border-color: black;" text="Buy Chips" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
+                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onShowShop" style="-fx-background-color: linear-gradient(to bottom, #139451, #056634); -fx-text-fill: white; -fx-border-color: black;" text="Buy Chips" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
                            <font>
                               <Font name="Dubai Regular" size="18.0" />
                            </font>

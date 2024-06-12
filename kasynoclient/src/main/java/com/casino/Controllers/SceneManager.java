@@ -20,6 +20,7 @@ public class SceneManager {
         add("ChatPage");
         add("GameHistory");
         add("ConnectWindow");
+        add("ShopWindow");
     }};
 
     public static final String startingScene = "LoginPage";

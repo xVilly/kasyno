@@ -1,25 +1,403 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.Light.Distant?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="612.0" prefWidth="1342.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.casino.Controllers.RouletteController">
    <children>
       <ImageView fitHeight="820.0" fitWidth="1341.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@RouletteTable/routletteTable6.png" />
+            <Image url="@../Images/routletteTable6.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="wheelImView" cache="true" cacheHint="ROTATE" fitHeight="301.0" fitWidth="420.0" layoutY="94.0" pickOnBounds="true" rotate="144.7" AnchorPane.bottomAnchor="346.79999999999995">
+      <ImageView fx:id="wheelImView" cache="true" cacheHint="ROTATE" fitHeight="298.0" fitWidth="288.0" layoutX="65.0" layoutY="95.59999999999997" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="357.974658203125">
          <image>
-            <Image url="@RouletteTable/wheel.png" />
+            <Image url="@../Images/wheeltest.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="34.0" fitWidth="36.0" layoutX="361.0" layoutY="215.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@RouletteTable/yellowArrow.png" />
+            <Image url="@../Images/yellowArrow.png" />
          </image>
       </ImageView>
+<!--      <Button fx:id="betB0" layoutX="451.0" layoutY="53.0" mnemonicParsing="false" opacity="0.0" prefHeight="238.0" prefWidth="55.0" text="0" />-->
+<!--      <Button fx:id="betB1" layoutX="512.0" layoutY="218.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="1" visible="false" />-->
+<!--      <Button fx:id="betB2" layoutX="512.0" layoutY="135.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="2" visible="false" />-->
+<!--      <Button fx:id="betB3" layoutX="512.0" layoutY="53.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="3" visible="false" />-->
+<!--      <Button fx:id="betB4" layoutX="566.0" layoutY="218.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="4" visible="false" />-->
+<!--      <Button fx:id="betB5" layoutX="566.0" layoutY="135.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="5" visible="false" />-->
+<!--      <Button fx:id="betB6" layoutX="566.0" layoutY="53.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="6" visible="false" />-->
+<!--      <Button fx:id="betB9" layoutX="618.0" layoutY="53.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="9" visible="false" />-->
+<!--      <Button fx:id="betB8" layoutX="618.0" layoutY="135.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="8" visible="false" />-->
+<!--      <Button fx:id="betB7" layoutX="618.0" layoutY="218.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="7" visible="false" />-->
+<!--      <Button fx:id="betB12" layoutX="671.0" layoutY="53.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="12" visible="false" />-->
+<!--      <Button fx:id="betB11" layoutX="671.0" layoutY="135.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="11" visible="false" />-->
+<!--      <Button fx:id="betB10" layoutX="671.0" layoutY="218.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="10" visible="false" />-->
+<!--      <Button fx:id="betB15" layoutX="726.0" layoutY="53.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="15" visible="false" />-->
+<!--      <Button fx:id="betB14" layoutX="724.0" layoutY="135.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="14" visible="false" />-->
+<!--      <Button fx:id="betB13" layoutX="724.0" layoutY="218.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="13" visible="false" />-->
+<!--      <Button fx:id="betB18" layoutX="777.0" layoutY="53.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="18" visible="false" />-->
+<!--      <Button fx:id="betB17" layoutX="777.0" layoutY="135.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="17" visible="false" />-->
+<!--      <Button fx:id="betB16" layoutX="777.0" layoutY="218.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="16" visible="false" />-->
+<!--      <Button fx:id="betB21" layoutX="830.0" layoutY="53.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="21" visible="false" />-->
+<!--      <Button fx:id="betB20" layoutX="830.0" layoutY="135.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="20" visible="false" />-->
+<!--      <Button fx:id="betB19" layoutX="830.0" layoutY="218.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="19" visible="false" />-->
+<!--      <Button fx:id="betB24" layoutX="882.0" layoutY="53.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="24" visible="false" />-->
+<!--      <Button fx:id="betB23" layoutX="882.0" layoutY="135.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="23" visible="false" />-->
+<!--      <Button fx:id="betB22" layoutX="882.0" layoutY="218.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="22" visible="false" />-->
+<!--      <Button fx:id="betB27" layoutX="935.0" layoutY="53.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="27" visible="false" />-->
+<!--      <Button fx:id="betB26" layoutX="936.0" layoutY="136.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="26" visible="false" />-->
+<!--      <Button fx:id="betB25" layoutX="935.0" layoutY="217.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="25" visible="false" />-->
+<!--      <Button fx:id="betB30" layoutX="988.0" layoutY="54.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="30" visible="false" />-->
+<!--      <Button fx:id="betB29" layoutX="988.0" layoutY="136.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="29" visible="false" />-->
+<!--      <Button fx:id="betB28" layoutX="988.0" layoutY="217.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="28" visible="false" />-->
+<!--      <Button fx:id="betB33" layoutX="1042.0" layoutY="54.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="33" visible="false" />-->
+<!--      <Button fx:id="betB32" layoutX="1042.0" layoutY="135.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="32" visible="false" />-->
+<!--      <Button fx:id="betB31" layoutX="1042.0" layoutY="217.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="31" visible="false" />-->
+<!--      <Button fx:id="betB36" layoutX="1095.0" layoutY="54.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="36" visible="false" />-->
+<!--      <Button fx:id="betB35" layoutX="1095.0" layoutY="135.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="35" visible="false" />-->
+<!--      <Button fx:id="betB34" layoutX="1095.0" layoutY="218.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="34" visible="false" />-->
+      <Button fx:id="betB0" layoutX="451.0" layoutY="53.0" mnemonicParsing="false" opacity="0.0" prefHeight="238.0" prefWidth="55.0" text="" visible="true" />
+      <Button fx:id="betB1" layoutX="512.0" layoutY="218.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB2" layoutX="512.0" layoutY="135.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB3" layoutX="512.0" layoutY="53.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB4" layoutX="566.0" layoutY="218.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB5" layoutX="566.0" layoutY="135.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB6" layoutX="566.0" layoutY="53.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB9" layoutX="618.0" layoutY="53.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB8" layoutX="618.0" layoutY="135.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB7" layoutX="618.0" layoutY="218.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB12" layoutX="671.0" layoutY="53.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB11" layoutX="671.0" layoutY="135.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB10" layoutX="671.0" layoutY="218.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB15" layoutX="726.0" layoutY="53.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB14" layoutX="724.0" layoutY="135.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB13" layoutX="724.0" layoutY="218.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB18" layoutX="777.0" layoutY="53.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB17" layoutX="777.0" layoutY="135.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB16" layoutX="777.0" layoutY="218.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB21" layoutX="830.0" layoutY="53.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB20" layoutX="830.0" layoutY="135.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB19" layoutX="830.0" layoutY="218.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB24" layoutX="882.0" layoutY="53.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB23" layoutX="882.0" layoutY="135.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB22" layoutX="882.0" layoutY="218.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB27" layoutX="935.0" layoutY="53.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB26" layoutX="936.0" layoutY="136.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB25" layoutX="935.0" layoutY="217.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB30" layoutX="988.0" layoutY="54.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB29" layoutX="988.0" layoutY="136.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB28" layoutX="988.0" layoutY="217.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB33" layoutX="1042.0" layoutY="54.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB32" layoutX="1042.0" layoutY="135.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB31" layoutX="1042.0" layoutY="217.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB36" layoutX="1095.0" layoutY="54.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB35" layoutX="1095.0" layoutY="135.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+      <Button fx:id="betB34" layoutX="1095.0" layoutY="218.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="" visible="true" />
+
+<!--      <Button fx:id="twoToOneBBot" layoutX="1148.0" layoutY="217.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" text="2to1bottom" />-->
+<!--      <Button fx:id="twoToOneBMid" layoutX="1148.0" layoutY="135.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="2to1middle" visible="false" />-->
+<!--      <Button fx:id="twoToOneBTop" layoutX="1148.0" layoutY="54.0" mnemonicParsing="false" prefHeight="74.0" prefWidth="48.0" text="2to1top" visible="false" />-->
+<!--      <Button fx:id="firstTwelveB" layoutX="511.0" layoutY="298.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="208.0" text="1st12" visible="false" />-->
+<!--      <Button fx:id="secondTwelveB" layoutX="724.0" layoutY="299.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="208.0" text="2nd12" visible="false" />-->
+<!--      <Button fx:id="thirdTwelveB" layoutX="934.0" layoutY="299.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="208.0" text="3rd12" visible="false" />-->
+<!--      <Button fx:id="oneToEighteenB" layoutX="512.0" layoutY="363.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="100.0" text="1to18" visible="false" />-->
+<!--      <Button fx:id="evenNumbersB" layoutX="619.0" layoutY="364.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="100.0" text="even" visible="false" />-->
+<!--      <Button fx:id="allRedB" layoutX="725.0" layoutY="364.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="100.0" text="allRed" visible="false" />-->
+<!--      <Button fx:id="allBlackB" layoutX="830.0" layoutY="364.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="100.0" text="allBlack" visible="false" />-->
+<!--      <Button fx:id="oddNumbersB" layoutX="937.0" layoutY="364.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="100.0" text="odd" visible="false" />-->
+<!--      <Button fx:id="nighteenToThirtySixB" layoutX="1042.0" layoutY="364.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="100.0" text="19to36" visible="false" />-->
+      <Button fx:id="twoToOneBBot" layoutX="1148.0" layoutY="217.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" />
+      <Button fx:id="twoToOneBMid" layoutX="1148.0" layoutY="135.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" />
+      <Button fx:id="twoToOneBTop" layoutX="1148.0" layoutY="54.0" mnemonicParsing="false" opacity="0.0" prefHeight="74.0" prefWidth="48.0" />
+      <Button fx:id="firstTwelveB" layoutX="511.0" layoutY="298.0" mnemonicParsing="false" opacity="0.0" prefHeight="59.0" prefWidth="208.0" />
+      <Button fx:id="secondTwelveB" layoutX="724.0" layoutY="299.0" mnemonicParsing="false" opacity="0.0" prefHeight="59.0" prefWidth="208.0" />
+      <Button fx:id="thirdTwelveB" layoutX="934.0" layoutY="299.0" mnemonicParsing="false" opacity="0.0" prefHeight="59.0" prefWidth="208.0" />
+      <Button fx:id="oneToEighteenB" layoutX="512.0" layoutY="363.0" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="100.0" />
+      <Button fx:id="evenNumbersB" layoutX="619.0" layoutY="364.0" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="100.0" />
+      <Button fx:id="allRedB" layoutX="725.0" layoutY="364.0" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="100.0" />
+      <Button fx:id="allBlackB" layoutX="830.0" layoutY="364.0" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="100.0" />
+      <Button fx:id="oddNumbersB" layoutX="937.0" layoutY="364.0" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="100.0" />
+      <Button fx:id="nineteenToThirtySixB" layoutX="1042.0" layoutY="364.0" mnemonicParsing="false" opacity="0.0" prefHeight="58.0" prefWidth="100.0" />
+      <VBox layoutX="14.0" layoutY="496.0" prefHeight="186.0" prefWidth="498.0">
+         <children>
+            <Label fx:id="balanceLabel" contentDisplay="RIGHT" prefHeight="73.0" prefWidth="502.0" text="Balance: 1000">
+               <font>
+                  <Font name="Bernard MT Condensed" size="42.0" />
+               </font>
+               <textFill>
+                  <LinearGradient endX="0.787878773429177" endY="1.0" startY="0.28787880232839874">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.35113710165023804" green="0.5894736647605896" blue="0.30346977710723877" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="0.6091617941856384" green="0.7894737124443054" blue="0.5730994343757629" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </textFill>
+            </Label>
+            <Label fx:id="betLabel" contentDisplay="RIGHT" prefHeight="41.0" prefWidth="498.0" text="Current Bet:" textAlignment="JUSTIFY">
+               <font>
+                  <Font name="Bernard MT Condensed" size="42.0" />
+               </font>
+               <textFill>
+                  <LinearGradient endX="0.787878773429177" endY="1.0" startY="0.28787880232839874">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.35113710165023804" green="0.5894736647605896" blue="0.30346977710723877" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="0.6091617941856384" green="0.7894737124443054" blue="0.5730994343757629" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </textFill>
+            </Label>
+            <Label fx:id="previousGameLabel" contentDisplay="RIGHT" prefHeight="41.0" prefWidth="498.0" text="Previous Game:" textAlignment="JUSTIFY">
+               <font>
+                  <Font name="Bernard MT Condensed" size="42.0" />
+               </font>
+               <textFill>
+                  <LinearGradient endX="0.787878773429177" endY="1.0" startY="0.28787880232839874">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="0.35113710165023804" green="0.5894736647605896" blue="0.30346977710723877" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="0.6091617941856384" green="0.7894737124443054" blue="0.5730994343757629" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </LinearGradient>
+               </textFill>
+            </Label>
+         </children>
+      </VBox>
+      <Button fx:id="rollButton" layoutX="720.0" layoutY="468.0" mnemonicParsing="false" prefHeight="108.0" prefWidth="114.0" style="-fx-background-color: linear-gradient(from 0.0% 28.7879% to 78.7879% 100.0%, #5a964d 0.0%, #9bc992 100.0%);" text="Roll!" textAlignment="CENTER">
+         <font>
+            <Font name="Bernard MT Condensed" size="21.0" />
+         </font>
+      </Button>
+      <Button fx:id="clearButton" layoutX="720.0" layoutY="619.0" mnemonicParsing="false" prefHeight="108.0" prefWidth="114.0" style="-fx-background-color: linear-gradient(from 0.0% 28.7879% to 78.7879% 100.0%, #5a964d 0.0%, #9bc992 100.0%);" text="Clear Bet" textAlignment="CENTER">
+         <font>
+            <Font name="Bernard MT Condensed" size="21.0" />
+         </font>
+      </Button>
+      <HBox layoutX="857.0" layoutY="607.0" prefHeight="132.0" prefWidth="466.0">
+         <children>
+            <Button fx:id="blackChip25" centerShape="false" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="117.0" prefWidth="119.0" scaleShape="false" style="-fx-background-radius: 100;" text="25" textAlignment="CENTER" textFill="WHITE" textOverrun="CENTER_ELLIPSIS" translateX="15.0">
+               <font>
+                  <Font name="Yu Gothic Bold" size="24.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="150.0" fitWidth="152.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" translateX="-12.0" translateY="-12.0">
+                     <image>
+                        <Image url="@../Images/chips2/black_chip.png" />
+                     </image>
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                     <effect>
+                        <Lighting diffuseConstant="1.16" specularConstant="0.0" specularExponent="40.0" surfaceScale="2.2">
+                           <bumpInput>
+                              <Shadow />
+                           </bumpInput>
+                           <light>
+                              <Light.Distant />
+                           </light>
+                        </Lighting>
+                     </effect>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="purpleChip100" centerShape="false" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="117.0" prefWidth="119.0" scaleShape="false" style="-fx-background-radius: 100;" text="100" textAlignment="CENTER" textFill="WHITE" textOverrun="CENTER_ELLIPSIS" translateX="40.0">
+               <font>
+                  <Font name="Yu Gothic Bold" size="24.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="150.0" fitWidth="152.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" translateX="-8.0" translateY="12.0">
+                     <image>
+                        <Image url="@../Images/chips2/purple_chip.png" />
+                     </image>
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                     <effect>
+                        <Lighting diffuseConstant="1.16" specularConstant="0.0" specularExponent="40.0" surfaceScale="2.2">
+                           <bumpInput>
+                              <Shadow />
+                           </bumpInput>
+                           <light>
+                              <Light.Distant />
+                           </light>
+                        </Lighting>
+                     </effect>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="redChip500" centerShape="false" contentDisplay="CENTER" layoutX="30.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="117.0" prefWidth="119.0" scaleShape="false" style="-fx-background-radius: 100;" text="500" textAlignment="CENTER" textFill="WHITE" textOverrun="CENTER_ELLIPSIS" translateX="65.0">
+               <font>
+                  <Font name="Yu Gothic Bold" size="24.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="150.0" fitWidth="152.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" translateX="10.0" translateY="7.0">
+                     <image>
+                        <Image url="@../Images/chips2/red_chip.png" />
+                     </image>
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                     <effect>
+                        <Lighting diffuseConstant="1.16" specularConstant="0.0" specularExponent="40.0" surfaceScale="2.2">
+                           <bumpInput>
+                              <Shadow />
+                           </bumpInput>
+                           <light>
+                              <Light.Distant />
+                           </light>
+                        </Lighting>
+                     </effect>
+                  </ImageView>
+               </graphic>
+            </Button>
+         </children>
+      </HBox>
+      <HBox layoutX="878.0" layoutY="469.0" prefHeight="132.0" prefWidth="466.0">
+         <children>
+            <Button fx:id="orangeChip1" centerShape="false" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="118.0" prefWidth="119.0" scaleShape="false" style="-fx-background-radius: 100;" text="1" textAlignment="CENTER" textFill="WHITE" textOverrun="CENTER_ELLIPSIS">
+               <font>
+                  <Font name="Yu Gothic Bold" size="24.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="150.0" fitWidth="250.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" translateX="-12.0" translateY="-7.0">
+                     <image>
+                        <Image url="@../Images/chips2/orange_chip.png" />
+                     </image>
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                     <effect>
+                        <Lighting diffuseConstant="1.16" specularConstant="0.0" specularExponent="40.0" surfaceScale="2.2">
+                           <bumpInput>
+                              <Shadow blurType="TWO_PASS_BOX" />
+                           </bumpInput>
+                           <light>
+                              <Light.Distant />
+                           </light>
+                        </Lighting>
+                     </effect>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="blueChip5" centerShape="false" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="117.0" prefWidth="119.0" scaleShape="false" style="-fx-background-radius: 100;" text="5" textAlignment="CENTER" textFill="WHITE" textOverrun="CENTER_ELLIPSIS" translateX="20.0">
+               <font>
+                  <Font name="Yu Gothic Bold" size="24.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="150.0" fitWidth="152.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" translateX="10.0" translateY="3.0">
+                     <image>
+                        <Image url="@../Images/chips2/blue_chip.png" />
+                     </image>
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                     <effect>
+                        <Lighting diffuseConstant="1.16" specularExponent="40.0" surfaceScale="2.2">
+                           <bumpInput>
+                              <Shadow />
+                           </bumpInput>
+                           <light>
+                              <Light.Distant />
+                           </light>
+                        </Lighting>
+                     </effect>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="greenChip10" centerShape="false" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="117.0" prefWidth="119.0" scaleShape="false" style="-fx-background-radius: 100;" text="10" textAlignment="CENTER" textFill="WHITE" textOverrun="CENTER_ELLIPSIS" translateX="45.0">
+               <font>
+                  <Font name="Yu Gothic Bold" size="24.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="150.0" fitWidth="152.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" translateX="9.0" translateY="-2.0">
+                     <image>
+                        <Image url="@../Images/chips2/green_chip.png" />
+                     </image>
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                     <effect>
+                        <Lighting diffuseConstant="1.16" specularConstant="0.0" specularExponent="40.0" surfaceScale="2.2">
+                           <bumpInput>
+                              <Shadow />
+                           </bumpInput>
+                           <light>
+                              <Light.Distant />
+                           </light>
+                        </Lighting>
+                     </effect>
+                  </ImageView>
+               </graphic>
+            </Button>
+         </children>
+      </HBox>
+      <Label fx:id="dealerLabel" alignment="CENTER" contentDisplay="RIGHT" layoutX="-13.0" layoutY="425.0" prefHeight="58.0" prefWidth="444.0" text="Welcome! Place your bets!">
+         <font>
+            <Font name="Bernard MT Condensed" size="24.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.787878773429177" endY="1.0" startY="0.28787880232839874">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.35113710165023804" green="0.5894736647605896" blue="0.30346977710723877" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.6091617941856384" green="0.7894737124443054" blue="0.5730994343757629" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <Button fx:id="clearTableButton" layoutX="1162.0" layoutY="317.0" mnemonicParsing="false" prefHeight="108.0" prefWidth="129.0" style="-fx-background-color: linear-gradient(from 0.0% 28.7879% to 78.7879% 100.0%, #5a964d 0.0%, #9bc992 100.0%);" text="Clear  table" textAlignment="CENTER">
+         <font>
+            <Font name="Bernard MT Condensed" size="21.0" />
+         </font>
+      </Button>
+      <Button fx:id="exitButton" layoutX="14.0" layoutY="686.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="114.0" style="-fx-background-color: linear-gradient(from 0.0% 28.7879% to 78.7879% 100.0%, #5a964d 0.0%, #9bc992 100.0%);" text="Exit" textAlignment="CENTER">
+         <font>
+            <Font name="Bernard MT Condensed" size="21.0" />
+         </font>
+      </Button>
+
    </children>
 </AnchorPane>

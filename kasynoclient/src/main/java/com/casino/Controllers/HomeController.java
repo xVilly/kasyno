@@ -58,12 +58,12 @@ public class HomeController implements IController {
 
     @FXML
     void onPlayRoulette(ActionEvent event) {
-
+        SceneManager.getInstance().openPopupWindow("Casino: Roulette", "RouletteController", "Casino: Roulette", false, false);
     }
 
     @FXML
-    void onShowLeaderboard(ActionEvent event) {
-
+    void onShowShop(ActionEvent event) {
+        SceneManager.getInstance().openPopupWindow("Buy Chips", "ShopWindow", "Buy Chips", false, false);
     }
 
 }
