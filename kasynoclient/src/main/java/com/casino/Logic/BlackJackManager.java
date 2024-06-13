@@ -10,6 +10,7 @@ public class BlackJackManager {
     private final List<Card> deck = new ArrayList<>();
     private Player player = new Player("Player1");
     private Player dealer = new Player("Dealer");
+    private static final int NUMBER_OF_DECKS = 6;
 
     public BlackJackManager()
     {
@@ -27,26 +28,23 @@ public class BlackJackManager {
         String[] suits = {"clubs", "diamonds", "hearts", "spades"};
         String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king", "ace"};
 
-        for( String suit : suits)
-        {
-            for(String rank : ranks)
-            {
-                int cardValue;
-                if (rank.equals("jack") || rank.equals("queen") || rank.equals("king"))
-                {
-                   cardValue = 10;
-                } else if (rank.equals("ace")) {
-                   cardValue = 11;
+        for (int i = 0; i < NUMBER_OF_DECKS ; i++) {
+            for (String suit : suits) {
+                for (String rank : ranks) {
+                    int cardValue;
+                    if (rank.equals("jack") || rank.equals("queen") || rank.equals("king")) {
+                        cardValue = 10;
+                    } else if (rank.equals("ace")) {
+                        cardValue = 11;
+                    } else {
+                        cardValue = Integer.parseInt(rank);
+                    }
+                    String cardName = rank + "_of_" + suit;
+                    Card card = new Card();
+                    card.setName(cardName);
+                    card.setValue(cardValue);
+                    deck.add(card);
                 }
-                else
-                {
-                    cardValue = Integer.parseInt(rank);
-                }
-                String cardName = rank + "_of_" + suit;
-                Card card = new Card();
-                card.setName(cardName);
-                card.setValue(cardValue);
-                deck.add(card);
             }
         }
     }
