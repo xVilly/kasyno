@@ -43,7 +43,7 @@ public class GameHistoryController implements IController {
             game.date = new Date(msg.getLong() * 1000);
             games.add(game);
         }
-        Platform.runLater(() -> UpdateGames(games.reversed()));
+        Platform.runLater(() -> UpdateGames(games));
     }
 
     public void UpdateGames(List<Game> games) {
