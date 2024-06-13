@@ -72,8 +72,10 @@ public class MessageSend {
         // if (games.size() > 10) {
         //     games = games.subList(games.size() - 10, games.size());
         // }
-        // msg.putInt(games.size());
-        // for (GameContext game : games) {
+        // int gameCount = games.size();
+        // msg.putInt(gameCount);
+        // for (int i=0; i < gameCount; i++) {
+        //     GameContext game = games.get(i);
         //     msg.putInt(game.getId());
         //     msg.putInt(game.getType());
         //     msg.putString(game.getUser());
