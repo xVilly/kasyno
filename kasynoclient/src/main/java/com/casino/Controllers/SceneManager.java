@@ -69,8 +69,13 @@ public class SceneManager {
         }
 
         primaryStage.setScene(new Scene(root));
-
+        primaryStage.setResizable(true);
+        primaryStage.setMaxHeight(1000);
+        primaryStage.setMaxWidth(1000);
+        primaryStage.setMinHeight(1000);
+        primaryStage.setMinWidth(1000);
         
+
         primaryStage.centerOnScreen();
         primaryStage.setResizable(false);
 

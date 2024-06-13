@@ -17,6 +17,7 @@ public class MessageSend {
             buffer.get(bytesToSend);
             sender.sendPacket(bytesToSend);
         }
+        System.out.println("Sent " + message.getBuffer().position() + " bytes to client " + sender.getConnectionId());
     }
 
     public void sendPingResponse(ClientHandler clientHandler) {

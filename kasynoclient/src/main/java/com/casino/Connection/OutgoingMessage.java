@@ -3,6 +3,7 @@ package com.casino.Connection;
 import java.nio.BufferOverflowException;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 public class OutgoingMessage {
     private byte opcode;
@@ -25,8 +26,9 @@ public class OutgoingMessage {
 
     public void putString(String text) {
         try {
-            buffer.putInt(text.length());
-            buffer.put(text.getBytes());
+            byte[] bytes = text.getBytes(StandardCharsets.UTF_8); // Convert to UTF-8 bytes
+            buffer.putInt(bytes.length); // Put the length of the byte array
+            buffer.put(bytes);
         }
         catch (BufferOverflowException ex) {
             System.out.println("[casino-client] Buffer overflow on putString while handling opcode '"+this.opcode+"'.");

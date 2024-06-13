@@ -2,6 +2,7 @@ package com.casino.Connection;
 
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 public class IncomingMessage {
@@ -27,10 +28,10 @@ public class IncomingMessage {
 
     public String getString() {
         try {
-            int stringSize = buffer.getInt();
-            byte[] stringBytes = new byte[stringSize];
-            buffer.get(stringBytes);
-            return new String(stringBytes);
+            int stringSize = buffer.getInt(); // Get the size of the byte array
+            byte[] stringBytes = new byte[stringSize]; // Create a byte array of that size
+            buffer.get(stringBytes); // Fill the byte array with bytes from the buffer
+            return new String(stringBytes, StandardCharsets.UTF_8); // Construct a new String using UTF-8 charset
         }
         catch (BufferUnderflowException ex) {
             System.out.println("[casino-server] Buffer underflow on getString while handling opcode '"+this.opcode+"'.");
