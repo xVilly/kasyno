@@ -210,7 +210,6 @@ public class BlackJackController implements IController {
                 {
                     dealerLabel.setText("It's a draw!");
                     player.setBalance(playerBalanceBeforeBetting );
-                    balanceLabel.setText(balanceLabelText + player.getBalance());
                     previousGameLabel.setText(prevGameLabelText + "+" +player.getTotalRoundBet() );
 
                     endGame(3, 1.0);

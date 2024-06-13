@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.example.AppTest" time="0.036" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.example.AppTest" time="0.037" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -16,7 +16,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="PL"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-21\bin"/>
-    <property name="sun.java.command" value="C:\Users\Michal\AppData\Local\Temp\surefire1556551314402358579\surefirebooter-20240613115555162_3.jar C:\Users\Michal\AppData\Local\Temp\surefire1556551314402358579 2024-06-13T11-55-55_052-jvmRun1 surefire-20240613115555162_1tmp surefire_0-20240613115555162_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\Michal\AppData\Local\Temp\surefire15199914599397127405\surefirebooter-20240613120703261_3.jar C:\Users\Michal\AppData\Local\Temp\surefire15199914599397127405 2024-06-13T12-07-03_156-jvmRun1 surefire-20240613120703261_1tmp surefire_0-20240613120703261_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\Michal\vscode\projekty\kasyno\kasynoserver\target\test-classes;C:\Users\Michal\vscode\projekty\kasyno\kasynoserver\target\classes;C:\Users\Michal\.m2\repository\junit\junit\4.11\junit-4.11.jar;C:\Users\Michal\.m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;C:\Users\Michal\.m2\repository\com\mysql\mysql-connector-j\8.0.33\mysql-connector-j-8.0.33.jar;C:\Users\Michal\.m2\repository\com\google\protobuf\protobuf-java\3.21.9\protobuf-java-3.21.9.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -31,7 +31,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\Michal\AppData\Local\Temp\surefire1556551314402358579\surefirebooter-20240613115555162_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\Michal\AppData\Local\Temp\surefire15199914599397127405\surefirebooter-20240613120703261_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.1+12-LTS-29"/>
@@ -60,5 +60,5 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="shouldAnswerWithTrue" classname="com.example.AppTest" time="0.002"/>
+  <testcase name="shouldAnswerWithTrue" classname="com.example.AppTest" time="0.003"/>
 </testsuite>
