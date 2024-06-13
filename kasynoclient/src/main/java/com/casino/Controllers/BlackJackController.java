@@ -51,6 +51,8 @@ public class BlackJackController implements IController {
 
     private int currentGameId = -1;
 
+    private boolean firstGame = true;
+
     public BlackJackController()
     {
         this.totalBetValue = 0;
@@ -59,8 +61,10 @@ public class BlackJackController implements IController {
     }
 
     public void onActivate() {
-        initbuttons();
-        showBegginingLabel();
+        if (firstGame) {
+            initbuttons();
+            showBegginingLabel();
+        }        
 
         ConnectionManager.getInstance().GetConnection().registerCallback((byte)0x04, (IncomingMessage msg) -> {
             onNewGameResultCallback(msg);
@@ -68,6 +72,7 @@ public class BlackJackController implements IController {
     }
     
     public void requestStartGame() {
+        firstGame = false;
         ConnectionManager.getInstance().GetConnection().getMessageSender().sendGameStart(1, totalBetValue);
     }
 

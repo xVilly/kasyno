@@ -1,1 +1,16 @@
-/home/villy/vscode/projects/kasynoserver/src/main/java/com/example/App.java
+C:\Users\Michal\vscode\projekty\kasyno\kasynoserver\src\main\java\com\example\connection\ClientHandler.java
+C:\Users\Michal\vscode\projekty\kasyno\kasynoserver\src\main\java\com\example\connection\MessageSend.java
+C:\Users\Michal\vscode\projekty\kasyno\kasynoserver\src\main\java\com\example\game\structures\StartGameResult.java
+C:\Users\Michal\vscode\projekty\kasyno\kasynoserver\src\main\java\com\example\game\GameContext.java
+C:\Users\Michal\vscode\projekty\kasyno\kasynoserver\src\main\java\com\example\database\DatabaseConnection.java
+C:\Users\Michal\vscode\projekty\kasyno\kasynoserver\src\main\java\com\example\user\LoginResult.java
+C:\Users\Michal\vscode\projekty\kasyno\kasynoserver\src\main\java\com\example\Server.java
+C:\Users\Michal\vscode\projekty\kasyno\kasynoserver\src\main\java\com\example\connection\MessageParse.java
+C:\Users\Michal\vscode\projekty\kasyno\kasynoserver\src\main\java\com\example\game\GameManager.java
+C:\Users\Michal\vscode\projekty\kasyno\kasynoserver\src\main\java\com\example\chat\ChatManager.java
+C:\Users\Michal\vscode\projekty\kasyno\kasynoserver\src\main\java\com\example\connection\OutgoingMessage.java
+C:\Users\Michal\vscode\projekty\kasyno\kasynoserver\src\main\java\com\example\user\LoginResponse.java
+C:\Users\Michal\vscode\projekty\kasyno\kasynoserver\src\main\java\com\example\connection\IncomingMessage.java
+C:\Users\Michal\vscode\projekty\kasyno\kasynoserver\src\main\java\com\example\user\UserContext.java
+C:\Users\Michal\vscode\projekty\kasyno\kasynoserver\src\main\java\com\example\connection\ConnectionManager.java
+C:\Users\Michal\vscode\projekty\kasyno\kasynoserver\src\main\java\com\example\user\UserManager.java
