@@ -1,4 +1,5 @@
 package com.casino.Controllers;
+import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -57,7 +58,6 @@ public class BlackJackController implements IController {
     {
         this.totalBetValue = 0;
         dealerLabel = new Label();
-//        playAgainButton.setVisible(false);
     }
 
     public void onActivate() {
@@ -159,7 +159,7 @@ public class BlackJackController implements IController {
         dealerCardPane.getChildren().clear();
         playerCardPane.getChildren().clear();
         cardsValLabel.setText(cardValLabelText + "0");
-        dealerLabel.setText(""); // Reset any game messages
+        dealerLabel.setText("");
         orangeChip1.setDisable(false);
         blueChip5.setDisable(false);
         greenChip10.setDisable(false);
@@ -170,15 +170,6 @@ public class BlackJackController implements IController {
         showBegginingLabel();
 
     }
-
-//    private void setBetValue1(ActionEvent event)
-//    {
-//        int betValue = 1;
-//        totalBetValue+=1;
-//        String currentBetText = "Current Bet: " + Integer.toString(totalBetValue);
-//        betLabel.setText(currentBetText);
-//
-//    }
 
     private void setBetValue(int betValue)
     {
@@ -198,47 +189,101 @@ public class BlackJackController implements IController {
     }
     private void stayButtonHandler()
     {
+        //nowa zmiana
         hitButton.setDisable(true);
         stayButton.setDisable(true);
         dDownButton.setDisable(true);
-
-        while ((dealer.getHandVal() < 17 && player.getHandVal() >  dealer.getHandVal()) || (dealer.getHandVal() < player.getHandVal() && dealer.hasAce() && dealer.getHandVal() < 17))
-        {
-            dealDelaerCard();
-        }
-
-        if(player.getHandVal() == dealer.getHandVal())
-        {
-            dealerLabel.setText("It's a draw!");
-            player.setBalance(playerBalanceBeforeBetting );
-            previousGameLabel.setText(prevGameLabelText + "+" +player.getTotalRoundBet() );
-
-            endGame(3, 1.0);
-
-            playAgainButton.setDisable(false);
-            playAgainButton.setVisible(true);
-
-        } else if (player.getHandVal() > dealer.getHandVal() || dealer.getHandVal() > 21) {
-
-            dealerLabel.setText("You won!");
-            player.setBalance(playerBalanceBeforeBetting+  player.getTotalRoundBet() );
-            previousGameLabel.setText(prevGameLabelText + "+" + (2 * player.getTotalRoundBet()) );
-            playAgainButton.setDisable(false);
-            playAgainButton.setVisible(true);
-            endGame(1, 2.0);
-        }
-        else
-        {
-            dealerLabel.setText("You lost!");
-            previousGameLabel.setText(prevGameLabelText + "-" +player.getTotalRoundBet() );
-            player.setBalance(playerBalanceBeforeBetting - player.getTotalRoundBet());
-            playAgainButton.setDisable(false);
-            playAgainButton.setVisible(true);
-
-            endGame(2, 0.0);
-        }
-
         playDealerCardAnimation();
+
+        PauseTransition pauseTransition = new PauseTransition(Duration.millis(1000));
+        pauseTransition.setOnFinished(event -> {
+
+            while ((dealer.getHandVal() < 17 && player.getHandVal() >  dealer.getHandVal()) || (dealer.getHandVal() < player.getHandVal() && dealer.hasAce() && dealer.getHandVal() < 17))
+            {
+                dealDelaerCard();
+
+            }
+            PauseTransition resultPause = new PauseTransition(Duration.millis(2000));
+            resultPause.setOnFinished(event2 ->{
+
+                if(player.getHandVal() == dealer.getHandVal())
+                {
+                    dealerLabel.setText("It's a draw!");
+                    player.setBalance(playerBalanceBeforeBetting );
+                    balanceLabel.setText(balanceLabelText + player.getBalance());
+                    previousGameLabel.setText(prevGameLabelText + "+" +player.getTotalRoundBet() );
+
+                    endGame(3, 1.0);
+                    playAgainButton.setDisable(false);
+                    playAgainButton.setVisible(true);
+
+                } else if (player.getHandVal() > dealer.getHandVal() || dealer.getHandVal() > 21) {
+
+                    dealerLabel.setText("You won!");
+                    player.setBalance(playerBalanceBeforeBetting+  player.getTotalRoundBet() );
+                    balanceLabel.setText(balanceLabelText+ player.getBalance());
+                    previousGameLabel.setText(prevGameLabelText + "+" + (2 * player.getTotalRoundBet()) );
+                    endGame(1, 2.0);
+                    playAgainButton.setDisable(false);
+                    playAgainButton.setVisible(true);
+                }
+                else
+                {
+                    dealerLabel.setText("You lost!");
+                    previousGameLabel.setText(prevGameLabelText + "-" +player.getTotalRoundBet() );
+                    player.setBalance(playerBalanceBeforeBetting - player.getTotalRoundBet());
+                    balanceLabel.setText(balanceLabelText+ player.getBalance());
+                    endGame(2, 0.0);
+                    playAgainButton.setDisable(false);
+                    playAgainButton.setVisible(true);
+                }
+            });
+            resultPause.play();
+
+
+        });
+        pauseTransition.play();
+//        hitButton.setDisable(true);
+//        stayButton.setDisable(true);
+//        dDownButton.setDisable(true);
+//
+//        while ((dealer.getHandVal() < 17 && player.getHandVal() >  dealer.getHandVal()) || (dealer.getHandVal() < player.getHandVal() && dealer.hasAce() && dealer.getHandVal() < 17))
+//        {
+//            dealDelaerCard();
+//        }
+//
+//        if(player.getHandVal() == dealer.getHandVal())
+//        {
+//            dealerLabel.setText("It's a draw!");
+//            player.setBalance(playerBalanceBeforeBetting );
+//            previousGameLabel.setText(prevGameLabelText + "+" +player.getTotalRoundBet() );
+//
+//            endGame(3, 1.0);
+//
+//            playAgainButton.setDisable(false);
+//            playAgainButton.setVisible(true);
+//
+//        } else if (player.getHandVal() > dealer.getHandVal() || dealer.getHandVal() > 21) {
+//
+//            dealerLabel.setText("You won!");
+//            player.setBalance(playerBalanceBeforeBetting+  player.getTotalRoundBet() );
+//            previousGameLabel.setText(prevGameLabelText + "+" + (2 * player.getTotalRoundBet()) );
+//            playAgainButton.setDisable(false);
+//            playAgainButton.setVisible(true);
+//            endGame(1, 2.0);
+//        }
+//        else
+//        {
+//            dealerLabel.setText("You lost!");
+//            previousGameLabel.setText(prevGameLabelText + "-" +player.getTotalRoundBet() );
+//            player.setBalance(playerBalanceBeforeBetting - player.getTotalRoundBet());
+//            playAgainButton.setDisable(false);
+//            playAgainButton.setVisible(true);
+//
+//            endGame(2, 0.0);
+//        }
+//
+//        playDealerCardAnimation();
 
     }
     private void noButtonHandler()
@@ -318,6 +363,8 @@ public class BlackJackController implements IController {
             }
             dealerLabel.setText("...");
             player.setBalance(playerBalanceBeforeBetting - insuaranceValue - player.getTotalRoundBet());
+            //nowa zmiana
+            playerBalanceBeforeBetting-=insuaranceValue;
             // balanceLabel.setText(balanceLabelText+ player.getBalance());
             endGame(2, -0.5);
         }
@@ -329,10 +376,8 @@ public class BlackJackController implements IController {
         stayButton.setDisable(true);
         dDownButton.setDisable(true);
 
-//        player.setBalance(player.getBalance() - player.getTotalRoundBet());
-//        player.setBetValue( 2 * player.getTotalRoundBet() );
-//        balanceLabel.setText(balanceLabelText + player.getBalance());
         player.doubleDown();
+        balanceLabel.setText(balanceLabelText +(playerBalanceBeforeBetting - player.getTotalRoundBet()) );
         dealCard();
         if(player.getHandVal() > 21)
         {
@@ -350,34 +395,57 @@ public class BlackJackController implements IController {
 
     private void playDealerCardAnimation()
     {
+        //najnowsze zmiany
+        TranslateTransition faceDownCardTransition = new TranslateTransition();
+        faceDownCardTransition.setDuration(Duration.millis(900));
+        faceDownCardTransition.setNode(dealerFaceDownCardView);
+        faceDownCardTransition.setToY(-150);
+        faceDownCardTransition.play();
 
-        Thread waitForTransition = new Thread(()-> {
-            try {
-                TranslateTransition faceDownCardTransition = new TranslateTransition();
-                faceDownCardTransition.setDuration(Duration.millis(700));
-                faceDownCardTransition.setNode(dealerFaceDownCardView);
-                faceDownCardTransition.setToY(-150);
-                faceDownCardTransition.play();
+        faceDownCardTransition.setOnFinished(event ->{
 
-                Thread.sleep(700);
+            Image faceDownExposureImage = new Image(getClass().getResource(cardPathForTheExposure).toExternalForm());
+            dealerFaceDownCardView.setImage(faceDownExposureImage);
+            dealerFaceDownCardView.setFitWidth(120);
+            dealerFaceDownCardView.setFitHeight(180);
 
-                Image faceDownExposureImage = new Image(getClass().getResource(cardPathForTheExposure).toExternalForm());
-                dealerFaceDownCardView.setImage(faceDownExposureImage);
-                dealerFaceDownCardView.setFitWidth(120);
-                dealerFaceDownCardView.setFitHeight(180);
+            TranslateTransition revealedCardTransition = new TranslateTransition();
+            revealedCardTransition.setDuration(Duration.millis(900));
+            revealedCardTransition.setNode(dealerFaceDownCardView);
+            revealedCardTransition.setToY(209);
+            revealedCardTransition.play();
 
-                TranslateTransition revealedCardTransition = new TranslateTransition();
-                revealedCardTransition.setDuration(Duration.millis(700));
-                revealedCardTransition.setNode(dealerFaceDownCardView);
-                revealedCardTransition.setToY(209);
-                revealedCardTransition.play();
+            Platform.runLater(() -> dCardsValLabel.setText(dcardValLabelText + dealer.getHandVal()));
 
-                Platform.runLater(() -> dCardsValLabel.setText(dcardValLabelText + dealer.getHandVal()));
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        waitForTransition.start();
+        } );
+
+//        Thread waitForTransition = new Thread(()-> {
+//            try {
+//                TranslateTransition faceDownCardTransition = new TranslateTransition();
+//                faceDownCardTransition.setDuration(Duration.millis(700));
+//                faceDownCardTransition.setNode(dealerFaceDownCardView);
+//                faceDownCardTransition.setToY(-150);
+//                faceDownCardTransition.play();
+//
+//                Thread.sleep(700);
+//
+//                Image faceDownExposureImage = new Image(getClass().getResource(cardPathForTheExposure).toExternalForm());
+//                dealerFaceDownCardView.setImage(faceDownExposureImage);
+//                dealerFaceDownCardView.setFitWidth(120);
+//                dealerFaceDownCardView.setFitHeight(180);
+//
+//                TranslateTransition revealedCardTransition = new TranslateTransition();
+//                revealedCardTransition.setDuration(Duration.millis(700));
+//                revealedCardTransition.setNode(dealerFaceDownCardView);
+//                revealedCardTransition.setToY(209);
+//                revealedCardTransition.play();
+//
+//                Platform.runLater(() -> dCardsValLabel.setText(dcardValLabelText + dealer.getHandVal()));
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//        });
+//        waitForTransition.start();
     }
     private void clearBet()
     {
@@ -527,8 +595,9 @@ public class BlackJackController implements IController {
 
     private void dealDelaerCard()
     {
-//        dealerFaceDownCardView = new ImageView();
+        //nowa zmiana
         bjm.dealDealerCard();
+
         ImageView dealerCardView = new ImageView();
         int dealerCardsValue = dealer.getHandVal();
         if (dealerCardsValue > 21 && dealer.hasAce()) {
@@ -537,20 +606,17 @@ public class BlackJackController implements IController {
         dealerCardsValue = dealer.getHandVal();
         if(dealerCardsPassed == 0)
         {
-
-            //initializing face_down_card
-//            dealerFaceDownCard = dealer.getHand().get(dealerCardsPassed);
-//            cardPathForTheExposure = dealerFaceDownCard.getImagePath();
-//            dealerFaceDownCard.setImagePath("/com/example/kasyno/pngcards/facedown.png");
-//            Image dealerFaceDownCardImage = new Image(getClass().getResource(dealerFaceDownCard.getImagePath()).toExternalForm());
-//            dealerFaceDownCardView.setImage(dealerFaceDownCardImage);
-//            dealerFaceDownCardView.setFitWidth(155);
-//            dealerFaceDownCardView.setFitHeight(193);
-//            dealerFaceDownCardView.setX(172);
-//            dealerFaceDownCardView.setY(-150);
             dealerFaceDownCardView = getDealerFaceDownCardView();
+
+            TranslateTransition faceDownTransition = new TranslateTransition();
+            faceDownTransition.setDuration(Duration.seconds(1));
+            faceDownTransition.setNode(dealerFaceDownCardView);
+            faceDownTransition.setToY(210);
+            faceDownTransition.play();
             Platform.runLater(() -> dealerCardPane.getChildren().add(dealerFaceDownCardView));
             Platform.runLater(() -> dCardsValLabel.setText(dcardValLabelText + "?"));
+
+            ++dealerCardsPassed;
         } else if (dealerCardsPassed == 1) {
 
             Card dealerRegularCard = dealer.getHand().get(dealerCardsPassed);
@@ -573,49 +639,126 @@ public class BlackJackController implements IController {
             dealerCardView.setFitHeight(180);
             dealerCardView.setX(152 + 160);
             dealerCardView.setY(-150);
-            Platform.runLater(() -> dCardsValLabel.setText(dcardValLabelText + "?"));
-        }
-        else
-        {
 
-            Card dealerRegularCard = dealer.getHand().get(dealerCardsPassed);
-            Image dealerRegularCardImage = new Image(getClass().getResource(dealerRegularCard.getImagePath()).toExternalForm());
-            dealerCardView.setImage(dealerRegularCardImage);
-            dealerCardView.setFitWidth(120);
-            dealerCardView.setFitHeight(180);
-            dealerCardView.setX(152 + 160 + nextCardPixelDraft);
-            System.out.println(nextCardPixelDraft);
-            dealerCardView.setY(-150);
-            int finalDealerCardsValue = dealerCardsValue;
-            Platform.runLater(() -> dCardsValLabel.setText(dcardValLabelText + finalDealerCardsValue));
-            nextCardPixelDraft += 50;
-        }
-
-        Platform.runLater(() -> dealerCardPane.getChildren().add(dealerCardView));
-
-        TranslateTransition faceDownTransition = new TranslateTransition();
-        faceDownTransition.setDuration(Duration.seconds(1));
-        faceDownTransition.setNode(dealerFaceDownCardView);
-        faceDownTransition.setToY(210);
-        faceDownTransition.play();
-
-        Thread waitForDealingCards = new Thread(() -> {
-            if (dealerCardsPassed > 2) {
-
-                try {
-                    Thread.sleep(1100);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
             TranslateTransition regularDealerCardTransition = new TranslateTransition();
             regularDealerCardTransition.setDuration(Duration.seconds(1));
             regularDealerCardTransition.setNode(dealerCardView);
             regularDealerCardTransition.setToY(210);
             regularDealerCardTransition.play();
-        });
-        waitForDealingCards.start();
-        ++dealerCardsPassed;
+            Platform.runLater(() -> dCardsValLabel.setText(dcardValLabelText + "?"));
+            Platform.runLater(() -> dealerCardPane.getChildren().add(dealerCardView));
+            ++dealerCardsPassed;
+        }
+        else
+        {
+
+
+            PauseTransition pauseTransition =new PauseTransition();
+            pauseTransition.setDuration(Duration.millis(1250));
+            pauseTransition.play();
+
+            int finalDealerCardsValue = dealerCardsValue;
+            pauseTransition.setOnFinished(event -> {
+
+                Card dealerRegularCard = dealer.getHand().get(dealerCardsPassed);
+                Image dealerRegularCardImage = new Image(getClass().getResource(dealerRegularCard.getImagePath()).toExternalForm());
+                dealerCardView.setImage(dealerRegularCardImage);
+                dealerCardView.setFitWidth(120);
+                dealerCardView.setFitHeight(180);
+                dealerCardView.setX(152 + 160 + nextCardPixelDraft);
+                System.out.println(nextCardPixelDraft);
+                dealerCardView.setY(-150);
+                nextCardPixelDraft += 50;
+                Platform.runLater(() -> dCardsValLabel.setText(dcardValLabelText + finalDealerCardsValue));
+                TranslateTransition delayedRegularDealerCardTransition = new TranslateTransition();
+                delayedRegularDealerCardTransition.setDuration(Duration.seconds(1));
+                delayedRegularDealerCardTransition.setNode(dealerCardView);
+                delayedRegularDealerCardTransition.setToY(210);
+                delayedRegularDealerCardTransition.play();
+                Platform.runLater(() -> dealerCardPane.getChildren().add(dealerCardView));
+                ++dealerCardsPassed;
+
+            } );
+        }
+
+//        bjm.dealDealerCard();
+//        ImageView dealerCardView = new ImageView();
+//        int dealerCardsValue = dealer.getHandVal();
+//        if (dealerCardsValue > 21 && dealer.hasAce()) {
+//            dealer.changeAceValues();
+//        }
+//        dealerCardsValue = dealer.getHandVal();
+//        if(dealerCardsPassed == 0)
+//        {
+//
+//            dealerFaceDownCardView = getDealerFaceDownCardView();
+//            Platform.runLater(() -> dealerCardPane.getChildren().add(dealerFaceDownCardView));
+//            Platform.runLater(() -> dCardsValLabel.setText(dcardValLabelText + "?"));
+//        } else if (dealerCardsPassed == 1) {
+//
+//            Card dealerRegularCard = dealer.getHand().get(dealerCardsPassed);
+//            if(dealerRegularCard.getValue() == 11 && player.getHandVal() != 21)
+//            {
+//
+//                insuYesButton.setVisible(true);
+//                insuYesButton.setDisable(false);
+//                insuNoButton.setVisible(true);
+//                insuNoButton.setDisable(false);
+//                Platform.runLater(() -> dealerLabel.setText("Insuarance Bet? Pays 2:1"));
+//                hitButton.setDisable(true);
+//                dDownButton.setDisable(true);
+//                stayButton.setDisable(true);
+//
+//            }
+//            Image dealerRegularCardImage = new Image(getClass().getResource(dealerRegularCard.getImagePath()).toExternalForm());
+//            dealerCardView.setImage(dealerRegularCardImage);
+//            dealerCardView.setFitWidth(120);
+//            dealerCardView.setFitHeight(180);
+//            dealerCardView.setX(152 + 160);
+//            dealerCardView.setY(-150);
+//            Platform.runLater(() -> dCardsValLabel.setText(dcardValLabelText + "?"));
+//        }
+//        else
+//        {
+//
+//            Card dealerRegularCard = dealer.getHand().get(dealerCardsPassed);
+//            Image dealerRegularCardImage = new Image(getClass().getResource(dealerRegularCard.getImagePath()).toExternalForm());
+//            dealerCardView.setImage(dealerRegularCardImage);
+//            dealerCardView.setFitWidth(120);
+//            dealerCardView.setFitHeight(180);
+//            dealerCardView.setX(152 + 160 + nextCardPixelDraft);
+//            System.out.println(nextCardPixelDraft);
+//            dealerCardView.setY(-150);
+//            int finalDealerCardsValue = dealerCardsValue;
+//            Platform.runLater(() -> dCardsValLabel.setText(dcardValLabelText + finalDealerCardsValue));
+//            nextCardPixelDraft += 50;
+//        }
+//
+//        Platform.runLater(() -> dealerCardPane.getChildren().add(dealerCardView));
+//
+//        TranslateTransition faceDownTransition = new TranslateTransition();
+//        faceDownTransition.setDuration(Duration.seconds(1));
+//        faceDownTransition.setNode(dealerFaceDownCardView);
+//        faceDownTransition.setToY(210);
+//        faceDownTransition.play();
+//
+//        Thread waitForDealingCards = new Thread(() -> {
+//            if (dealerCardsPassed > 2) {
+//
+//                try {
+//                    Thread.sleep(1100);
+//                } catch (InterruptedException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
+//            TranslateTransition regularDealerCardTransition = new TranslateTransition();
+//            regularDealerCardTransition.setDuration(Duration.seconds(1));
+//            regularDealerCardTransition.setNode(dealerCardView);
+//            regularDealerCardTransition.setToY(210);
+//            regularDealerCardTransition.play();
+//        });
+//        waitForDealingCards.start();
+//        ++dealerCardsPassed;
 
     }
 
