@@ -17,7 +17,7 @@ public class MessageSend {
             buffer.get(bytesToSend);
             sender.sendPacket(bytesToSend);
         }
-        System.out.println("Sent " + message.getBuffer().position() + " bytes to client " + sender.getConnectionId());
+        System.out.println("Sent " + message.getBuffer().position() + " bytes opcode to client " + sender.getConnectionId());
     }
 
     public void sendPingResponse(ClientHandler clientHandler) {
@@ -67,21 +67,21 @@ public class MessageSend {
     }
 
     public void sendGameHistory(ClientHandler clientHandler, List<GameContext> games) {
-        OutgoingMessage msg = new OutgoingMessage((byte) 0x06, clientHandler);
-        // limit to 10 last games
-        if (games.size() > 10) {
-            games = games.subList(games.size() - 10, games.size());
-        }
-        msg.putInt(games.size());
-        for (GameContext game : games) {
-            msg.putInt(game.getId());
-            msg.putInt(game.getType());
-            msg.putString(game.getUser());
-            msg.putDouble(game.getBet());
-            msg.putInt(game.getResult());
-            msg.putDouble(game.getBetMultiplier());
-            msg.putLong(game.getDate());
-        }
-        sendMessage(msg);
+        // OutgoingMessage msg = new OutgoingMessage((byte) 0x06, clientHandler);
+        // // limit to 10 last games
+        // if (games.size() > 10) {
+        //     games = games.subList(games.size() - 10, games.size());
+        // }
+        // msg.putInt(games.size());
+        // for (GameContext game : games) {
+        //     msg.putInt(game.getId());
+        //     msg.putInt(game.getType());
+        //     msg.putString(game.getUser());
+        //     msg.putDouble(game.getBet());
+        //     msg.putInt(game.getResult());
+        //     msg.putDouble(game.getBetMultiplier());
+        //     msg.putLong(game.getDate());
+        // }
+        // sendMessage(msg);
     }
 }

@@ -1,5 +1,6 @@
 package com.casino.Controllers;
 
+import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -145,6 +146,9 @@ public class RouletteController implements IController {
 
         rouletteLogic.checkIfPlayerWins(rolledNumber);
         balanceLabel.setText(balanceLabelText + roulettePlayer.getBalance());
+        PauseTransition waitForBalanceTransition = new PauseTransition();
+        waitForBalanceTransition.setDuration(Duration.millis(500));
+        waitForBalanceTransition.setOnFinished(event -> {
         if(playerBalanceBeforeBetting > roulettePlayer.getBalance())
         {
             previousGameLabel.setText(prevGameLabelText + "-" + (playerWholeRoundBet));
@@ -152,7 +156,8 @@ public class RouletteController implements IController {
         else
         {
             previousGameLabel.setText(prevGameLabelText + "+" + roulettePlayer.getLatestWinnings());
-        }
+        }});
+        waitForBalanceTransition.play();
 //        playerBalanceAfterBetting = roulettePlayer.getBalance();
         roulettePlayer.getBetRouletteNumbers().clear();
         playerWholeRoundBet = 0;
