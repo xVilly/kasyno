@@ -1,4 +1,5 @@
 package com.casino.Controllers;
+import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -14,6 +15,7 @@ import com.casino.Connection.ConnectionManager;
 import com.casino.Connection.IncomingMessage;
 import com.casino.Logic.BlackJackManager;
 import com.casino.Logic.Player;
+import com.casino.Logic.User;
 
 public class BlackJackController implements IController {
 
@@ -48,31 +50,53 @@ public class BlackJackController implements IController {
     private int nextCardPixelDraft = 50;
     private int playerBalanceBeforeBetting = 0;
 
+    private int currentGameId = -1;
+
+    private boolean firstGame = true;
+
     public BlackJackController()
     {
         this.totalBetValue = 0;
         dealerLabel = new Label();
-//        playAgainButton.setVisible(false);
     }
 
     public void onActivate() {
-        initbuttons();
-        showBegginingLabel();
+        if (firstGame) {
+            initbuttons();
+            showBegginingLabel();
+        }        
 
         ConnectionManager.getInstance().GetConnection().registerCallback((byte)0x04, (IncomingMessage msg) -> {
             onNewGameResultCallback(msg);
         });
+    }
+    
+    public void requestStartGame() {
+        firstGame = false;
+        ConnectionManager.getInstance().GetConnection().getMessageSender().sendGameStart(1, totalBetValue);
     }
 
     public void onNewGameResultCallback(IncomingMessage msg) {
         int success = msg.getInt();
         if (success == 1) {
             int gameId = msg.getInt();
-            System.out.println("Received game start message: success (started game id "+gameId+")");
+            currentGameId = gameId;
+            System.out.println("[casino-client] Received game start message: success (started game id "+gameId+")");
+            Platform.runLater(() -> placeBet());
         } else {
-            System.out.println("Received game start message: failed");
-
+            int errorCode = msg.getInt();
+            String errorMessage = msg.getString();
+            System.out.println("[casino-client] Received game start message: failed (error code "+errorCode+"): "+errorMessage);
         }
+    }
+
+    public void onBalanceUpdate(double newBalance) {
+        balanceLabel.setText(balanceLabelText + newBalance);
+    }
+
+    private void endGame(int result, double betMultiplier)
+    {
+        ConnectionManager.getInstance().GetConnection().getMessageSender().sendGameEnd(currentGameId, result, betMultiplier);
     }
 
     @FXML
@@ -81,7 +105,7 @@ public class BlackJackController implements IController {
 
         player = bjm.getPlayer();
 
-        balanceLabel.setText(balanceLabelText + player.getBalance());
+        onBalanceUpdate(User.getBalance());
         betLabel.setText(betLabelText + "0");
 //        orangeChiplayer.setOnAction(this::setBetValue1);
         orangeChip1.setOnAction(event -> setBetValue(1));
@@ -92,7 +116,7 @@ public class BlackJackController implements IController {
         redChip500.setOnAction(event -> setBetValue(500));
 
         clearButton.setOnAction(event -> clearBet());
-        betButton.setOnAction(event -> placeBet());
+        betButton.setOnAction(event -> requestStartGame());
 
         hitButton.setOnAction(event -> hitPlayerCard());
         stayButton.setOnAction(event -> stayButtonHandler());
@@ -135,7 +159,7 @@ public class BlackJackController implements IController {
         dealerCardPane.getChildren().clear();
         playerCardPane.getChildren().clear();
         cardsValLabel.setText(cardValLabelText + "0");
-        dealerLabel.setText(""); // Reset any game messages
+        dealerLabel.setText("");
         orangeChip1.setDisable(false);
         blueChip5.setDisable(false);
         greenChip10.setDisable(false);
@@ -147,18 +171,9 @@ public class BlackJackController implements IController {
 
     }
 
-//    private void setBetValue1(ActionEvent event)
-//    {
-//        int betValue = 1;
-//        totalBetValue+=1;
-//        String currentBetText = "Current Bet: " + Integer.toString(totalBetValue);
-//        betLabel.setText(currentBetText);
-//
-//    }
-
     private void setBetValue(int betValue)
     {
-        if ((totalBetValue + betValue)  <= player.getBalance()) {
+        if ((totalBetValue + betValue)  <= User.getBalance()) {
             totalBetValue += betValue;
             player.setBetValue(betValue);
             String currentBetText = betLabelText + totalBetValue;
@@ -166,53 +181,108 @@ public class BlackJackController implements IController {
         }
         else
         {
-            totalBetValue = player.getBalance();
+            totalBetValue = (int)User.getBalance();
             player.setBetValue(betValue);
-            betLabel.setText(betLabelText + player.getBalance());
+            betLabel.setText(betLabelText + User.getBalance());
         }
         player.setTotalRoundBet(totalBetValue);
     }
     private void stayButtonHandler()
     {
+        //nowa zmiana
         hitButton.setDisable(true);
         stayButton.setDisable(true);
         dDownButton.setDisable(true);
-
-        while ((dealer.getHandVal() < 17 && player.getHandVal() >  dealer.getHandVal()) || (dealer.getHandVal() < player.getHandVal() && dealer.hasAce() && dealer.getHandVal() < 17))
-        {
-            dealDelaerCard();
-        }
-
-        if(player.getHandVal() == dealer.getHandVal())
-        {
-            dealerLabel.setText("It's a draw!");
-            player.setBalance(playerBalanceBeforeBetting );
-            balanceLabel.setText(balanceLabelText + player.getBalance());
-            previousGameLabel.setText(prevGameLabelText + "+" +player.getTotalRoundBet() );
-
-            playAgainButton.setDisable(false);
-            playAgainButton.setVisible(true);
-
-        } else if (player.getHandVal() > dealer.getHandVal() || dealer.getHandVal() > 21) {
-
-            dealerLabel.setText("You won!");
-            player.setBalance(playerBalanceBeforeBetting+  player.getTotalRoundBet() );
-            balanceLabel.setText(balanceLabelText+ player.getBalance());
-            previousGameLabel.setText(prevGameLabelText + "+" + (2 * player.getTotalRoundBet()) );
-            playAgainButton.setDisable(false);
-            playAgainButton.setVisible(true);
-        }
-        else
-        {
-            dealerLabel.setText("You lost!");
-            previousGameLabel.setText(prevGameLabelText + "-" +player.getTotalRoundBet() );
-            player.setBalance(playerBalanceBeforeBetting - player.getTotalRoundBet());
-            balanceLabel.setText(balanceLabelText+ player.getBalance());
-            playAgainButton.setDisable(false);
-            playAgainButton.setVisible(true);
-        }
-
         playDealerCardAnimation();
+
+        PauseTransition pauseTransition = new PauseTransition(Duration.millis(1000));
+        pauseTransition.setOnFinished(event -> {
+
+            while ((dealer.getHandVal() < 17 && player.getHandVal() >  dealer.getHandVal()) || (dealer.getHandVal() < player.getHandVal() && dealer.hasAce() && dealer.getHandVal() < 17))
+            {
+                dealDelaerCard();
+
+            }
+            PauseTransition resultPause = new PauseTransition(Duration.millis(2000));
+            resultPause.setOnFinished(event2 ->{
+
+                if(player.getHandVal() == dealer.getHandVal())
+                {
+                    dealerLabel.setText("It's a draw!");
+                    player.setBalance(playerBalanceBeforeBetting );
+                    previousGameLabel.setText(prevGameLabelText + "+" +player.getTotalRoundBet() );
+
+                    endGame(3, 1.0);
+                    playAgainButton.setDisable(false);
+                    playAgainButton.setVisible(true);
+
+                } else if (player.getHandVal() > dealer.getHandVal() || dealer.getHandVal() > 21) {
+
+                    dealerLabel.setText("You won!");
+                    player.setBalance(playerBalanceBeforeBetting+  player.getTotalRoundBet() );
+                    balanceLabel.setText(balanceLabelText+ player.getBalance());
+                    previousGameLabel.setText(prevGameLabelText + "+" + (2 * player.getTotalRoundBet()) );
+                    endGame(1, 2.0);
+                    playAgainButton.setDisable(false);
+                    playAgainButton.setVisible(true);
+                }
+                else
+                {
+                    dealerLabel.setText("You lost!");
+                    previousGameLabel.setText(prevGameLabelText + "-" +player.getTotalRoundBet() );
+                    player.setBalance(playerBalanceBeforeBetting - player.getTotalRoundBet());
+                    balanceLabel.setText(balanceLabelText+ player.getBalance());
+                    endGame(2, 0.0);
+                    playAgainButton.setDisable(false);
+                    playAgainButton.setVisible(true);
+                }
+            });
+            resultPause.play();
+
+
+        });
+        pauseTransition.play();
+//        hitButton.setDisable(true);
+//        stayButton.setDisable(true);
+//        dDownButton.setDisable(true);
+//
+//        while ((dealer.getHandVal() < 17 && player.getHandVal() >  dealer.getHandVal()) || (dealer.getHandVal() < player.getHandVal() && dealer.hasAce() && dealer.getHandVal() < 17))
+//        {
+//            dealDelaerCard();
+//        }
+//
+//        if(player.getHandVal() == dealer.getHandVal())
+//        {
+//            dealerLabel.setText("It's a draw!");
+//            player.setBalance(playerBalanceBeforeBetting );
+//            previousGameLabel.setText(prevGameLabelText + "+" +player.getTotalRoundBet() );
+//
+//            endGame(3, 1.0);
+//
+//            playAgainButton.setDisable(false);
+//            playAgainButton.setVisible(true);
+//
+//        } else if (player.getHandVal() > dealer.getHandVal() || dealer.getHandVal() > 21) {
+//
+//            dealerLabel.setText("You won!");
+//            player.setBalance(playerBalanceBeforeBetting+  player.getTotalRoundBet() );
+//            previousGameLabel.setText(prevGameLabelText + "+" + (2 * player.getTotalRoundBet()) );
+//            playAgainButton.setDisable(false);
+//            playAgainButton.setVisible(true);
+//            endGame(1, 2.0);
+//        }
+//        else
+//        {
+//            dealerLabel.setText("You lost!");
+//            previousGameLabel.setText(prevGameLabelText + "-" +player.getTotalRoundBet() );
+//            player.setBalance(playerBalanceBeforeBetting - player.getTotalRoundBet());
+//            playAgainButton.setDisable(false);
+//            playAgainButton.setVisible(true);
+//
+//            endGame(2, 0.0);
+//        }
+//
+//        playDealerCardAnimation();
 
     }
     private void noButtonHandler()
@@ -225,10 +295,13 @@ public class BlackJackController implements IController {
         {
             dealerLabel.setText("You lost!");
             previousGameLabel.setText(prevGameLabelText + "-" + player.getTotalRoundBet() );
-            balanceLabel.setText(balanceLabelText+ (playerBalanceBeforeBetting - player.getTotalRoundBet()));
+            // balanceLabel.setText(balanceLabelText+ (playerBalanceBeforeBetting - player.getTotalRoundBet()));
             playDealerCardAnimation();
             playAgainButton.setDisable(false);
             playAgainButton.setVisible(true);
+
+            endGame(2, 0);
+
         }
         else
         {
@@ -265,10 +338,12 @@ public class BlackJackController implements IController {
         if(dealer.getHandVal() == 21 && player.getHandVal() < 21)
         {
             dealerLabel.setText("You get the insurance!");
-            player.setBalance(playerBalanceBeforeBetting - player.getTotalRoundBet() + insuaranceValue );
+            player.setBalance(playerBalanceBeforeBetting - player.getTotalRoundBet() + insuaranceValue);
             previousGameLabel.setText(prevGameLabelText + "+" + insuaranceValue*2);
-            balanceLabel.setText(balanceLabelText+ player.getBalance());
+            // balanceLabel.setText(balanceLabelText+ player.getBalance());
             playDealerCardAnimation();
+
+            endGame(1, 0.5);
 
             playAgainButton.setDisable(false);
             playAgainButton.setVisible(true);
@@ -287,7 +362,10 @@ public class BlackJackController implements IController {
             }
             dealerLabel.setText("...");
             player.setBalance(playerBalanceBeforeBetting - insuaranceValue - player.getTotalRoundBet());
-            balanceLabel.setText(balanceLabelText+ player.getBalance());
+            //nowa zmiana
+            playerBalanceBeforeBetting-=insuaranceValue;
+            // balanceLabel.setText(balanceLabelText+ player.getBalance());
+            endGame(2, -0.5);
         }
 
     }
@@ -297,19 +375,18 @@ public class BlackJackController implements IController {
         stayButton.setDisable(true);
         dDownButton.setDisable(true);
 
-//        player.setBalance(player.getBalance() - player.getTotalRoundBet());
-//        player.setBetValue( 2 * player.getTotalRoundBet() );
-//        balanceLabel.setText(balanceLabelText + player.getBalance());
         player.doubleDown();
+        balanceLabel.setText(balanceLabelText +(playerBalanceBeforeBetting - player.getTotalRoundBet()) );
         dealCard();
         if(player.getHandVal() > 21)
         {
             dealerLabel.setText("You lost!");
-            previousGameLabel.setText(prevGameLabelText + "-" +player.getTotalRoundBet() );
+            previousGameLabel.setText(prevGameLabelText + "-" +2*player.getTotalRoundBet() );
             player.setBalance(playerBalanceBeforeBetting - 2* player.getTotalRoundBet());
-            balanceLabel.setText(balanceLabelText+ player.getBalance());
+            // balanceLabel.setText(balanceLabelText+ player.getBalance());
             playAgainButton.setDisable(false);
             playAgainButton.setVisible(true);
+            endGame(2, -1.0);
             return;
         }
         stayButtonHandler();
@@ -317,34 +394,57 @@ public class BlackJackController implements IController {
 
     private void playDealerCardAnimation()
     {
+        //najnowsze zmiany
+        TranslateTransition faceDownCardTransition = new TranslateTransition();
+        faceDownCardTransition.setDuration(Duration.millis(900));
+        faceDownCardTransition.setNode(dealerFaceDownCardView);
+        faceDownCardTransition.setToY(-150);
+        faceDownCardTransition.play();
 
-        Thread waitForTransition = new Thread(()-> {
-            try {
-                TranslateTransition faceDownCardTransition = new TranslateTransition();
-                faceDownCardTransition.setDuration(Duration.millis(700));
-                faceDownCardTransition.setNode(dealerFaceDownCardView);
-                faceDownCardTransition.setToY(-150);
-                faceDownCardTransition.play();
+        faceDownCardTransition.setOnFinished(event ->{
 
-                Thread.sleep(700);
+            Image faceDownExposureImage = new Image(getClass().getResource(cardPathForTheExposure).toExternalForm());
+            dealerFaceDownCardView.setImage(faceDownExposureImage);
+            dealerFaceDownCardView.setFitWidth(120);
+            dealerFaceDownCardView.setFitHeight(180);
 
-                Image faceDownExposureImage = new Image(getClass().getResource(cardPathForTheExposure).toExternalForm());
-                dealerFaceDownCardView.setImage(faceDownExposureImage);
-                dealerFaceDownCardView.setFitWidth(120);
-                dealerFaceDownCardView.setFitHeight(180);
+            TranslateTransition revealedCardTransition = new TranslateTransition();
+            revealedCardTransition.setDuration(Duration.millis(900));
+            revealedCardTransition.setNode(dealerFaceDownCardView);
+            revealedCardTransition.setToY(209);
+            revealedCardTransition.play();
 
-                TranslateTransition revealedCardTransition = new TranslateTransition();
-                revealedCardTransition.setDuration(Duration.millis(700));
-                revealedCardTransition.setNode(dealerFaceDownCardView);
-                revealedCardTransition.setToY(209);
-                revealedCardTransition.play();
+            Platform.runLater(() -> dCardsValLabel.setText(dcardValLabelText + dealer.getHandVal()));
 
-                Platform.runLater(() -> dCardsValLabel.setText(dcardValLabelText + dealer.getHandVal()));
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        waitForTransition.start();
+        } );
+
+//        Thread waitForTransition = new Thread(()-> {
+//            try {
+//                TranslateTransition faceDownCardTransition = new TranslateTransition();
+//                faceDownCardTransition.setDuration(Duration.millis(700));
+//                faceDownCardTransition.setNode(dealerFaceDownCardView);
+//                faceDownCardTransition.setToY(-150);
+//                faceDownCardTransition.play();
+//
+//                Thread.sleep(700);
+//
+//                Image faceDownExposureImage = new Image(getClass().getResource(cardPathForTheExposure).toExternalForm());
+//                dealerFaceDownCardView.setImage(faceDownExposureImage);
+//                dealerFaceDownCardView.setFitWidth(120);
+//                dealerFaceDownCardView.setFitHeight(180);
+//
+//                TranslateTransition revealedCardTransition = new TranslateTransition();
+//                revealedCardTransition.setDuration(Duration.millis(700));
+//                revealedCardTransition.setNode(dealerFaceDownCardView);
+//                revealedCardTransition.setToY(209);
+//                revealedCardTransition.play();
+//
+//                Platform.runLater(() -> dCardsValLabel.setText(dcardValLabelText + dealer.getHandVal()));
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//        });
+//        waitForTransition.start();
     }
     private void clearBet()
     {
@@ -354,21 +454,12 @@ public class BlackJackController implements IController {
 
     private void placeBet()
     {
-        playerBalanceBeforeBetting = player.getBalance();
         if(player.getBetValue() == 0)
         {
             return;
         }
-        int newplayerBalance = player.getBalance();
-        newplayerBalance -= totalBetValue;
-        player.setBalance(newplayerBalance);
-
-        ConnectionManager.getInstance().GetConnection().getMessageSender().sendGameStart(1, totalBetValue);
-
         betLabel.setText(betLabelText + "0");
-        balanceLabel.setText(balanceLabelText + player.getBalance());
         totalBetValue = 0;
-
 
         betButton.setDisable(true);
         orangeChip1.setDisable(true);
@@ -461,11 +552,13 @@ public class BlackJackController implements IController {
             //nowa zmiana
 //            player.setBalance(player.getBalance() + player.getTotalRoundBet());
             player.setBalance(playerBalanceBeforeBetting + 2* player.getTotalRoundBet());
-            Platform.runLater(() -> balanceLabel.setText(balanceLabelText + player.getBalance()));
+            // Platform.runLater(() -> balanceLabel.setText(balanceLabelText + player.getBalance()));
             Platform.runLater(() -> previousGameLabel.setText(prevGameLabelText + "+" + 2 * player.getTotalRoundBet()));
             Platform.runLater(() -> cardsValLabel.setText(cardValLabelText + totalPlayerCardsValue));
             playAgainButton.setVisible(true);
             playAgainButton.setDisable(false);
+
+            endGame(1, 2.0);
             return;
         } else if (player.getHandVal() > 21 && player.hasAce()) {
             player.changeAceValues();
@@ -474,9 +567,13 @@ public class BlackJackController implements IController {
 
             Platform.runLater(()-> dealerLabel.setText("You lost!"));
             Platform.runLater(() -> previousGameLabel.setText(prevGameLabelText + "-" +player.getTotalRoundBet() ));
-            Platform.runLater(() -> balanceLabel.setText(balanceLabelText+ (playerBalanceBeforeBetting - player.getTotalRoundBet())));
+            // Platform.runLater(() -> balanceLabel.setText(balanceLabelText+ (playerBalanceBeforeBetting - player.getTotalRoundBet())));
             //???
 //            Platform.runLater(() -> balanceLabel.setText(balanceLabelText+ (playerBalanceBeforeBetting - player.getTotalRoundBet())));
+            playAgainButton.setVisible(true);
+            playAgainButton.setDisable(false);
+            endGame(2, 0.0);
+            return;
         } else
         {
             stayButton.setDisable(false);
@@ -497,8 +594,9 @@ public class BlackJackController implements IController {
 
     private void dealDelaerCard()
     {
-//        dealerFaceDownCardView = new ImageView();
+        //nowa zmiana
         bjm.dealDealerCard();
+
         ImageView dealerCardView = new ImageView();
         int dealerCardsValue = dealer.getHandVal();
         if (dealerCardsValue > 21 && dealer.hasAce()) {
@@ -507,20 +605,17 @@ public class BlackJackController implements IController {
         dealerCardsValue = dealer.getHandVal();
         if(dealerCardsPassed == 0)
         {
-
-            //initializing face_down_card
-//            dealerFaceDownCard = dealer.getHand().get(dealerCardsPassed);
-//            cardPathForTheExposure = dealerFaceDownCard.getImagePath();
-//            dealerFaceDownCard.setImagePath("/com/example/kasyno/pngcards/facedown.png");
-//            Image dealerFaceDownCardImage = new Image(getClass().getResource(dealerFaceDownCard.getImagePath()).toExternalForm());
-//            dealerFaceDownCardView.setImage(dealerFaceDownCardImage);
-//            dealerFaceDownCardView.setFitWidth(155);
-//            dealerFaceDownCardView.setFitHeight(193);
-//            dealerFaceDownCardView.setX(172);
-//            dealerFaceDownCardView.setY(-150);
             dealerFaceDownCardView = getDealerFaceDownCardView();
+
+            TranslateTransition faceDownTransition = new TranslateTransition();
+            faceDownTransition.setDuration(Duration.seconds(1));
+            faceDownTransition.setNode(dealerFaceDownCardView);
+            faceDownTransition.setToY(210);
+            faceDownTransition.play();
             Platform.runLater(() -> dealerCardPane.getChildren().add(dealerFaceDownCardView));
             Platform.runLater(() -> dCardsValLabel.setText(dcardValLabelText + "?"));
+
+            ++dealerCardsPassed;
         } else if (dealerCardsPassed == 1) {
 
             Card dealerRegularCard = dealer.getHand().get(dealerCardsPassed);
@@ -543,49 +638,126 @@ public class BlackJackController implements IController {
             dealerCardView.setFitHeight(180);
             dealerCardView.setX(152 + 160);
             dealerCardView.setY(-150);
-            Platform.runLater(() -> dCardsValLabel.setText(dcardValLabelText + "?"));
-        }
-        else
-        {
 
-            Card dealerRegularCard = dealer.getHand().get(dealerCardsPassed);
-            Image dealerRegularCardImage = new Image(getClass().getResource(dealerRegularCard.getImagePath()).toExternalForm());
-            dealerCardView.setImage(dealerRegularCardImage);
-            dealerCardView.setFitWidth(120);
-            dealerCardView.setFitHeight(180);
-            dealerCardView.setX(152 + 160 + nextCardPixelDraft);
-            System.out.println(nextCardPixelDraft);
-            dealerCardView.setY(-150);
-            int finalDealerCardsValue = dealerCardsValue;
-            Platform.runLater(() -> dCardsValLabel.setText(dcardValLabelText + finalDealerCardsValue));
-            nextCardPixelDraft += 50;
-        }
-
-        Platform.runLater(() -> dealerCardPane.getChildren().add(dealerCardView));
-
-        TranslateTransition faceDownTransition = new TranslateTransition();
-        faceDownTransition.setDuration(Duration.seconds(1));
-        faceDownTransition.setNode(dealerFaceDownCardView);
-        faceDownTransition.setToY(210);
-        faceDownTransition.play();
-
-        Thread waitForDealingCards = new Thread(() -> {
-            if (dealerCardsPassed > 2) {
-
-                try {
-                    Thread.sleep(1100);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
             TranslateTransition regularDealerCardTransition = new TranslateTransition();
             regularDealerCardTransition.setDuration(Duration.seconds(1));
             regularDealerCardTransition.setNode(dealerCardView);
             regularDealerCardTransition.setToY(210);
             regularDealerCardTransition.play();
-        });
-        waitForDealingCards.start();
-        ++dealerCardsPassed;
+            Platform.runLater(() -> dCardsValLabel.setText(dcardValLabelText + "?"));
+            Platform.runLater(() -> dealerCardPane.getChildren().add(dealerCardView));
+            ++dealerCardsPassed;
+        }
+        else
+        {
+
+
+            PauseTransition pauseTransition =new PauseTransition();
+            pauseTransition.setDuration(Duration.millis(1250));
+            pauseTransition.play();
+
+            int finalDealerCardsValue = dealerCardsValue;
+            pauseTransition.setOnFinished(event -> {
+
+                Card dealerRegularCard = dealer.getHand().get(dealerCardsPassed);
+                Image dealerRegularCardImage = new Image(getClass().getResource(dealerRegularCard.getImagePath()).toExternalForm());
+                dealerCardView.setImage(dealerRegularCardImage);
+                dealerCardView.setFitWidth(120);
+                dealerCardView.setFitHeight(180);
+                dealerCardView.setX(152 + 160 + nextCardPixelDraft);
+                System.out.println(nextCardPixelDraft);
+                dealerCardView.setY(-150);
+                nextCardPixelDraft += 50;
+                Platform.runLater(() -> dCardsValLabel.setText(dcardValLabelText + finalDealerCardsValue));
+                TranslateTransition delayedRegularDealerCardTransition = new TranslateTransition();
+                delayedRegularDealerCardTransition.setDuration(Duration.seconds(1));
+                delayedRegularDealerCardTransition.setNode(dealerCardView);
+                delayedRegularDealerCardTransition.setToY(210);
+                delayedRegularDealerCardTransition.play();
+                Platform.runLater(() -> dealerCardPane.getChildren().add(dealerCardView));
+                ++dealerCardsPassed;
+
+            } );
+        }
+
+//        bjm.dealDealerCard();
+//        ImageView dealerCardView = new ImageView();
+//        int dealerCardsValue = dealer.getHandVal();
+//        if (dealerCardsValue > 21 && dealer.hasAce()) {
+//            dealer.changeAceValues();
+//        }
+//        dealerCardsValue = dealer.getHandVal();
+//        if(dealerCardsPassed == 0)
+//        {
+//
+//            dealerFaceDownCardView = getDealerFaceDownCardView();
+//            Platform.runLater(() -> dealerCardPane.getChildren().add(dealerFaceDownCardView));
+//            Platform.runLater(() -> dCardsValLabel.setText(dcardValLabelText + "?"));
+//        } else if (dealerCardsPassed == 1) {
+//
+//            Card dealerRegularCard = dealer.getHand().get(dealerCardsPassed);
+//            if(dealerRegularCard.getValue() == 11 && player.getHandVal() != 21)
+//            {
+//
+//                insuYesButton.setVisible(true);
+//                insuYesButton.setDisable(false);
+//                insuNoButton.setVisible(true);
+//                insuNoButton.setDisable(false);
+//                Platform.runLater(() -> dealerLabel.setText("Insuarance Bet? Pays 2:1"));
+//                hitButton.setDisable(true);
+//                dDownButton.setDisable(true);
+//                stayButton.setDisable(true);
+//
+//            }
+//            Image dealerRegularCardImage = new Image(getClass().getResource(dealerRegularCard.getImagePath()).toExternalForm());
+//            dealerCardView.setImage(dealerRegularCardImage);
+//            dealerCardView.setFitWidth(120);
+//            dealerCardView.setFitHeight(180);
+//            dealerCardView.setX(152 + 160);
+//            dealerCardView.setY(-150);
+//            Platform.runLater(() -> dCardsValLabel.setText(dcardValLabelText + "?"));
+//        }
+//        else
+//        {
+//
+//            Card dealerRegularCard = dealer.getHand().get(dealerCardsPassed);
+//            Image dealerRegularCardImage = new Image(getClass().getResource(dealerRegularCard.getImagePath()).toExternalForm());
+//            dealerCardView.setImage(dealerRegularCardImage);
+//            dealerCardView.setFitWidth(120);
+//            dealerCardView.setFitHeight(180);
+//            dealerCardView.setX(152 + 160 + nextCardPixelDraft);
+//            System.out.println(nextCardPixelDraft);
+//            dealerCardView.setY(-150);
+//            int finalDealerCardsValue = dealerCardsValue;
+//            Platform.runLater(() -> dCardsValLabel.setText(dcardValLabelText + finalDealerCardsValue));
+//            nextCardPixelDraft += 50;
+//        }
+//
+//        Platform.runLater(() -> dealerCardPane.getChildren().add(dealerCardView));
+//
+//        TranslateTransition faceDownTransition = new TranslateTransition();
+//        faceDownTransition.setDuration(Duration.seconds(1));
+//        faceDownTransition.setNode(dealerFaceDownCardView);
+//        faceDownTransition.setToY(210);
+//        faceDownTransition.play();
+//
+//        Thread waitForDealingCards = new Thread(() -> {
+//            if (dealerCardsPassed > 2) {
+//
+//                try {
+//                    Thread.sleep(1100);
+//                } catch (InterruptedException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
+//            TranslateTransition regularDealerCardTransition = new TranslateTransition();
+//            regularDealerCardTransition.setDuration(Duration.seconds(1));
+//            regularDealerCardTransition.setNode(dealerCardView);
+//            regularDealerCardTransition.setToY(210);
+//            regularDealerCardTransition.play();
+//        });
+//        waitForDealingCards.start();
+//        ++dealerCardsPassed;
 
     }
 
@@ -646,9 +818,11 @@ public class BlackJackController implements IController {
         if (player.getHandVal() == 21) {
             dealerLabel.setText("You won!");
             player.setBalance(playerBalanceBeforeBetting +  player.getTotalRoundBet());
-            balanceLabel.setText(balanceLabelText + player.getBalance());
+            // balanceLabel.setText(balanceLabelText + player.getBalance());
             previousGameLabel.setText(prevGameLabelText + "+" + 2 * player.getTotalRoundBet() );
             playAgainButton.setVisible(true);
+            playAgainButton.setDisable(false);
+            endGame(1, 2.0);
 
         } else if (player.getHandVal() > 21 && player.hasAce()) {
             player.changeAceValues();

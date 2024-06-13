@@ -11,7 +11,7 @@ public class OutgoingMessage {
 
     public OutgoingMessage(byte opcode, ClientHandler sender) {
         this.opcode = opcode;
-        this.buffer = ByteBuffer.allocate(1024);
+        this.buffer = ByteBuffer.allocate(4096);
         this.sender = sender;
 
         buffer.put(opcode);
@@ -49,5 +49,13 @@ public class OutgoingMessage {
 
     public ClientHandler getSender() {
         return sender;
+    }
+
+    public void putLong(long date) {
+        try {
+            buffer.putLong(date);
+        } catch (BufferOverflowException ex) {
+            System.out.println("[casino-server] Buffer overflow on putLong while handling opcode '"+this.opcode+"'.");
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.casino.Controllers;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,6 +18,9 @@ public class SceneManager {
         add("LoginPage");
         add("HomePage");
         add("ChatPage");
+        add("GameHistory");
+        add("ConnectWindow");
+        add("ShopWindow");
     }};
 
     public static final String startingScene = "LoginPage";
@@ -63,17 +67,11 @@ public class SceneManager {
             System.out.println("Scene "+name+" not found");
             return;
         }
-        if (primaryStage.getScene() == null)
-            primaryStage.setScene(new Scene(root));
-        else
-            primaryStage.getScene().setRoot(root);
+
+        primaryStage.setScene(new Scene(root));
 
         
-        primaryStage.setResizable(true);
-        primaryStage.sizeToScene();
         primaryStage.centerOnScreen();
-
-
         primaryStage.setResizable(false);
 
 
@@ -122,6 +120,13 @@ public class SceneManager {
         openWindows.remove(windowName);
     }
 
+    public void closePopupWindows() {
+        List<String> windows = new ArrayList<>(openWindows.keySet());
+        for (String windowName : windows) {
+            closePopupWindow(windowName);
+        }
+    }
+
     public <ControllerType> ControllerType getController(String name) {
         IController controller = controllerMap.get(name);
         if (controller != null && controller.getClass().isInstance(controller))
@@ -130,6 +135,7 @@ public class SceneManager {
     }
 
     public void LoadScenes() {
+        screenMap.clear();
         for (String sceneName : scenes) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Scenes/"+sceneName+".fxml"));

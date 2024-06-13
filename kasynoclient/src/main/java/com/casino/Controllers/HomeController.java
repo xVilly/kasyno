@@ -32,14 +32,18 @@ public class HomeController implements IController {
         thumbRoulette.setFitWidth(gridRoulette.getWidth());
     }
 
-    public void setup(String username, double balance) {
+    public void setup(String username) {
         labelUsername.setText(username);
-        labelBalance.setText(balance + " $");
+        onBalanceUpdate(0);
+    }
+
+    public void onBalanceUpdate(double balance) {
+        labelBalance.setText(balance + "");
     }
 
     @FXML
     void onGameHistory(ActionEvent event) {
-
+        SceneManager.getInstance().openPopupWindow("Game History", "GameHistory", "Game History", true, false);
     }
 
     @FXML
@@ -54,12 +58,12 @@ public class HomeController implements IController {
 
     @FXML
     void onPlayRoulette(ActionEvent event) {
-
+        SceneManager.getInstance().openPopupWindow("Casino: Roulette", "RouletteController", "Casino: Roulette", false, false);
     }
 
     @FXML
-    void onShowLeaderboard(ActionEvent event) {
-
+    void onShowShop(ActionEvent event) {
+        SceneManager.getInstance().openPopupWindow("Buy Chips", "ShopWindow", "Buy Chips", false, false);
     }
 
 }

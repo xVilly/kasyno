@@ -6,7 +6,9 @@ import java.sql.Connection;
 import com.example.chat.ChatManager;
 import com.example.game.GameContext;
 import com.example.game.GameManager;
+import com.example.game.structures.StartGameResult;
 import com.example.user.LoginResponse;
+import com.example.user.UserContext;
 import com.example.user.UserManager;
 
 public class MessageParse {
@@ -24,6 +26,7 @@ public class MessageParse {
         switch(opcode) {
             /* 0x00: Keep Alive (no response) */
             case 0x00:
+                parseClientPing(msg);
                 break;
 
             /* 0x01: Create Account */
@@ -50,6 +53,16 @@ public class MessageParse {
             case 0x05:
                 parseChatMessage(msg);
                 break;
+
+            /* 0x06: End Game */
+            case 0x06:
+                parseGameEnd(msg);
+                break;
+
+            /* 0x07: Buy Chips */
+            case 0x07:
+                parseBuyChips(msg);
+                break;
             
             default:
                 System.out.println("[casino-server] Received unknown opcode "+opcode+" from client '"+clientHandler.getIpAddress()+"' (id "+clientHandler.getConnectionId()+")");
@@ -59,6 +72,10 @@ public class MessageParse {
         if (msg.getUnreadSize() > 0) {
             System.out.println("[casino-server] MessageParse left "+msg.getUnreadSize()+" unread bytes (opcode "+opcode+") from client '"+clientHandler.getIpAddress()+"' (id "+clientHandler.getConnectionId()+")");
         }
+    }
+
+    private void parseClientPing(IncomingMessage msg) {
+        ConnectionManager.getInstance().getMessageSender().sendPingResponse(msg.getSender());
     }
 
 
@@ -81,6 +98,10 @@ public class MessageParse {
             msg.getSender().setAssociatedUser(name);
         }
         ConnectionManager.getInstance().getMessageSender().sendAuthenticationResponse(msg.getSender(), response);
+
+        if (response.getResult() == 1) {
+            ConnectionManager.getInstance().getMessageSender().sendGameHistory(msg.getSender(), GameManager.getInstance().getGameHistory());
+        }
     }
 
     private void parseGameStart(IncomingMessage msg) {
@@ -91,17 +112,16 @@ public class MessageParse {
             ConnectionManager.getInstance().getMessageSender().sendNewGameResponse(msg.getSender(), null);
             return;
         }
-        GameContext result = GameManager.getInstance().startGame(gameType, betAmount, username);
-        if (result != null) {
-            UserManager.getInstance().UpdateUserBalance(username, -betAmount);
-        }
+        
+        StartGameResult result = GameManager.getInstance().startGame(gameType, betAmount, username);
         ConnectionManager.getInstance().getMessageSender().sendNewGameResponse(msg.getSender(), result);
     }
 
     private void parseGameEnd(IncomingMessage msg) {
         int gameId = msg.getInt();
         int result = msg.getInt();
-        
+        double betMultiplier = msg.getDouble();
+        GameManager.getInstance().endGame(gameId, result, betMultiplier);
     }
 
     private void parseChatJoin(IncomingMessage msg) {
@@ -119,6 +139,16 @@ public class MessageParse {
 
         String message = msg.getString();
         ChatManager.getInstance().onUserMessage(username, message);
+    }
+
+    private void parseBuyChips(IncomingMessage msg) {
+        double amount = msg.getDouble();
+        String username = msg.getSender().getAssociatedUser();
+        if (username == null)
+            return;
+
+        UserContext userData = UserManager.getInstance().GetUserData(username);
+        UserManager.getInstance().UpdateUserBalance(username, userData.getBalance() + amount);
     }
 
 }

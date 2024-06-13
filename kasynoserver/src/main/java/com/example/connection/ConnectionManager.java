@@ -56,12 +56,6 @@ public class ConnectionManager {
         return msgSender;
     }
 
-    public void broadcastMessage(byte[] message) {
-        for (ClientHandler clientHandler : clientConnections) {
-
-        }
-    }
-
     public List<ClientHandler> getUserConnections(String username) {
         List<ClientHandler> userConnections = new ArrayList<>();
         for (ClientHandler clientHandler : clientConnections) {
@@ -70,5 +64,9 @@ public class ConnectionManager {
             }
         }
         return userConnections;
+    }
+
+    public List<ClientHandler> getClientConnections() {
+        return clientConnections;
     }
 }

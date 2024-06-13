@@ -8,12 +8,18 @@ public class GameContext {
     private int type;
     private String user;
     private double bet;
+    // 0 - in progress, 1 - win, 2 - lose
+    private int result;
+    private double betMultiplier;
+    private long date;
 
     public GameContext(int id, int type, String user, double bet) {
         this.id = id;
         this.type = type;
         this.user = user;
         this.bet = bet;
+        this.result = 0;
+        this.betMultiplier = 0;
     }
 
     public int getId() {
@@ -48,5 +54,28 @@ public class GameContext {
         this.bet = bet;
     }
 
+    public int getResult() {
+        return result;
+    }
+
+    public void setResult(int result) {
+        this.result = result;
+    }
+
+    public double getBetMultiplier() {
+        return betMultiplier;
+    }
+
+    public void setBetMultiplier(double betMultiplier) {
+        this.betMultiplier = betMultiplier;
+    }
+
+    public void setDate(long date) {
+        this.date = date;
+    }
+
+    public long getDate() {
+        return date;
+    }
     
 }

@@ -10,7 +10,7 @@ public class OutgoingMessage {
 
     public OutgoingMessage(byte opcode) {
         this.opcode = opcode;
-        this.buffer = ByteBuffer.allocate(1024);
+        this.buffer = ByteBuffer.allocate(4096);
 
         buffer.put(opcode);
     }

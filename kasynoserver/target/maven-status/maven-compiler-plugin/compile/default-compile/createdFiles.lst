@@ -1,0 +1,16 @@
+com\example\connection\IncomingMessage.class
+com\example\connection\OutgoingMessage.class
+com\example\user\UserManager.class
+com\example\connection\ClientHandler.class
+com\example\user\LoginResult.class
+com\example\game\structures\StartGameResult.class
+com\example\user\LoginResponse.class
+com\example\database\DatabaseConnection.class
+com\example\chat\ChatManager.class
+com\example\connection\ConnectionManager.class
+com\example\connection\MessageParse.class
+com\example\game\GameManager.class
+com\example\Server.class
+com\example\connection\MessageSend.class
+com\example\game\GameContext.class
+com\example\user\UserContext.class
